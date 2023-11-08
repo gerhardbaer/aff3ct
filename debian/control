@@ -3,7 +3,10 @@ Section: devel
 Priority: optional
 Maintainer: Team AFF3CT <team.aff3ct@gmail.com>
 Build-Depends: cmake,
-               debhelper (>= 9)
+               debhelper (>= 9),
+               doxygen,
+               librsvg2-bin,
+               python3-venv
 Standards-Version: 3.9.7
 Homepage: http://aff3ct.github.io/
 

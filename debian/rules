@@ -3,12 +3,26 @@
 %:
 	dh  $@ --parallel --buildsystem=cmake
 
-override_dh_auto_configure:
+override_dh_auto_configure: doc/build/html/index.html
 	dh_auto_configure -- \
 		-DCMAKE_BUILD_TYPE=Release \
 		-DAFF3CT_EXT_STRINGS=OFF \
 		-DAFF3CT_COMPILE_SHARED_LIB=ON \
 		-DAFF3CT_COMPILE_STATIC_LIB=OFF
 
+override_dh_auto_build:
+	dh_auto_build --parallel
+
 override_dh_auto_install:
 	dh_auto_install --buildsystem=cmake
+
+# Build documentation (HTML)
+sphinx_prefix	= $(CURDIR)/tools/sphinx
+sphinx_build	= $(sphinx_prefix)/bin/sphinx-build
+
+doc/build/html/index.html: $(sphinx_build)
+	. $(sphinx_prefix)/bin/activate && make -C doc html
+$(sphinx_build): $(sphinx_prefix)/bin/activate
+	. $(sphinx_prefix)/bin/activate && pip install -r doc/requirements.txt
+$(sphinx_prefix)/bin/activate:
+	python3 -m venv $(sphinx_prefix)
