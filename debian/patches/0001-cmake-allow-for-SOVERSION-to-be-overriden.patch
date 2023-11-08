@@ -1,0 +1,38 @@
+From 3bee39497c1468f1303f49d6b111bb76f5a7a8a7 Mon Sep 17 00:00:00 2001
+From: Gerhard Baer <gerhard.baer@protonmail.com>
+Date: Thu, 9 Nov 2023 10:19:42 +0100
+Subject: [PATCH] cmake: allow for SOVERSION to be overriden.
+
+A DSO shall always have a correct SONAME, the major defines the API/ABI
+we want to expose.
+
+Signed-off-by: Gerhard Baer <Gerhard.Baer@protonmail.com>
+---
+ CMakeLists.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index fbf91d84d..58e38bb3a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -24,6 +24,7 @@ option(AFF3CT_MPI                "Enable the MPI support"
+ option(AFF3CT_POLAR_BIT_PACKING  "Enable the bit packing technique for Polar code SC decoding"              ON )
+ option(AFF3CT_POLAR_BOUNDS       "Enable the use of the external Tal & Vardy Polar best channels generator" OFF)
+ option(AFF3CT_OVERRIDE_VERSION   "Compile without .git directory, provided a version and hash"              OFF)
++option(AFF3CT_OVERRIDE_SOVERSION "Fix shared library SONAME version"                                        OFF)
+ 
+ if (AFF3CT_COMPILE_EXE OR AFF3CT_COMPILE_STATIC_LIB OR AFF3CT_COMPILE_SHARED_LIB)
+     set(AFF3CT_COMPILE_OBJ ON)
+@@ -225,6 +226,9 @@ if(AFF3CT_COMPILE_SHARED_LIB)
+     set_target_properties(aff3ct-shared-lib PROPERTIES
+                                             OUTPUT_NAME aff3ct-${AFF3CT_VERSION_FULL}
+                                             POSITION_INDEPENDENT_CODE ON) # set -fpic
++    if(DEFINED AFF3CT_OVERRIDE_SOVERSION)
++        set_property(TARGET aff3ct-shared-lib APPEND PROPERTY SOVERSION ${AFF3CT_OVERRIDE_SOVERSION})
++    endif()
+     message(STATUS "AFF3CT - Compile: shared library")
+ endif(AFF3CT_COMPILE_SHARED_LIB)
+ if(AFF3CT_COMPILE_STATIC_LIB)
+-- 
+2.39.2
+

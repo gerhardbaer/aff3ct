@@ -6,7 +6,8 @@ Build-Depends: cmake,
                debhelper (>= 9),
                doxygen,
                librsvg2-bin,
-               python3-venv
+               python3-venv,
+               quilt
 Standards-Version: 3.9.7
 Homepage: http://aff3ct.github.io/
 
@@ -23,7 +24,7 @@ Description: AFF3CT - A Fast Forward Error Correction Toolbox!
  as a FEC library and all the blocks can be reused separately in
  various contexts.
 
-Package: libaff3ct
+Package: libaff3ct0
 Architecture: amd64
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: AFF3CT - A Fast Forward Error Correction Toolbox!
@@ -38,7 +39,7 @@ Description: AFF3CT - A Fast Forward Error Correction Toolbox!
 
 Package: libaff3ct-dev
 Architecture: amd64
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}, libaff3ct0 (= ${binary:Version})
 Description: AFF3CT - A Fast Forward Error Correction Toolbox!
  AFF3CT is an open source software dedicated to Forward Error
  Correction (FEC or channel coding) simulations. It is written in C++
