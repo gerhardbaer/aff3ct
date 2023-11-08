@@ -1,0 +1,61 @@
+Source: aff3ct
+Section: devel
+Priority: optional
+Maintainer: Team AFF3CT <team.aff3ct@gmail.com>
+Build-Depends: cmake,
+               debhelper (>= 9)
+Standards-Version: 3.9.7
+Homepage: http://aff3ct.github.io/
+
+Package: aff3ct-bin
+Architecture: amd64
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: AFF3CT - A Fast Forward Error Correction Toolbox!
+ AFF3CT is an open source software dedicated to Forward Error
+ Correction (FEC or channel coding) simulations. It is written in C++
+ and it supports a broad range of codes: from the well-spread turbo
+ codes and Low-Density Parity-Check (LDPC) codes to the more recent
+ polar codes. A particular emphasis is given to simulation throughput
+ performance (multiple Mb/s on modern CPUs). AFF3CT can also been used
+ as a FEC library and all the blocks can be reused separately in
+ various contexts.
+
+Package: libaff3ct
+Architecture: amd64
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: AFF3CT - A Fast Forward Error Correction Toolbox!
+ AFF3CT is an open source software dedicated to Forward Error
+ Correction (FEC or channel coding) simulations. It is written in C++
+ and it supports a broad range of codes: from the well-spread turbo
+ codes and Low-Density Parity-Check (LDPC) codes to the more recent
+ polar codes. A particular emphasis is given to simulation throughput
+ performance (multiple Mb/s on modern CPUs). AFF3CT can also been used
+ as a FEC library and all the blocks can be reused separately in
+ various contexts.
+
+Package: libaff3ct-dev
+Architecture: amd64
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: AFF3CT - A Fast Forward Error Correction Toolbox!
+ AFF3CT is an open source software dedicated to Forward Error
+ Correction (FEC or channel coding) simulations. It is written in C++
+ and it supports a broad range of codes: from the well-spread turbo
+ codes and Low-Density Parity-Check (LDPC) codes to the more recent
+ polar codes. A particular emphasis is given to simulation throughput
+ performance (multiple Mb/s on modern CPUs). AFF3CT can also been used
+ as a FEC library and all the blocks can be reused separately in
+ various contexts.
+
+Package: aff3ct-doc
+Section: doc
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: AFF3CT - A Fast Forward Error Correction Toolbox!
+ AFF3CT is an open source software dedicated to Forward Error
+ Correction (FEC or channel coding) simulations. It is written in C++
+ and it supports a broad range of codes: from the well-spread turbo
+ codes and Low-Density Parity-Check (LDPC) codes to the more recent
+ polar codes. A particular emphasis is given to simulation throughput
+ performance (multiple Mb/s on modern CPUs). AFF3CT can also been used
+ as a FEC library and all the blocks can be reused separately in
+ various contexts.

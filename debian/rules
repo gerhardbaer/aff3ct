@@ -1,0 +1,14 @@
+#!/usr/bin/make -f
+
+%:
+	dh  $@ --parallel --buildsystem=cmake
+
+override_dh_auto_configure:
+	dh_auto_configure -- \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DAFF3CT_EXT_STRINGS=OFF \
+		-DAFF3CT_COMPILE_SHARED_LIB=ON \
+		-DAFF3CT_COMPILE_STATIC_LIB=OFF
+
+override_dh_auto_install:
+	dh_auto_install --buildsystem=cmake
