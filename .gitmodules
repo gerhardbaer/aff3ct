@@ -3,10 +3,10 @@
 	url = ../MIPP
 [submodule "conf"]
 	path = conf
-	url = ../configuration_files
+	url = https://github.com/aff3ct/configuration_files.git
 [submodule "refs"]
 	path = refs
-	url = ../error_rate_references
+	url = https://github.com/aff3ct/error_rate_references.git
 [submodule "lib/date"]
 	path = lib/date
 	url = https://github.com/HowardHinnant/date.git
@@ -15,4 +15,4 @@
 	url = ../cli
 [submodule "lib/aff3ct-core"]
 	path = lib/aff3ct-core
-	url = ../aff3ct-core/
+	url = ../aff3ct-core
