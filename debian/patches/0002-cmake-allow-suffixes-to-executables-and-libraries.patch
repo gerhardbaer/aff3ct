@@ -1,0 +1,151 @@
+From 5b5199ec6434f9c52c04de9055ca10cb0ed46116 Mon Sep 17 00:00:00 2001
+From: Gerhard Baer <Gerhard.Baer@protonmail.com>
+Date: Sat, 18 Nov 2023 14:07:28 +0100
+Subject: [PATCH 2/2] cmake: allow suffixes to executables and libraries.
+
+---
+ CMakeLists.txt | 22 ++++++++++++++--------
+ 1 file changed, 14 insertions(+), 8 deletions(-)
+
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -25,6 +25,12 @@
+ option(AFF3CT_POLAR_BOUNDS       "Enable the use of the external Tal & Vardy Polar best channels generator" OFF)
+ option(AFF3CT_OVERRIDE_VERSION   "Compile without .git directory, provided a version and hash"              OFF)
+ option(AFF3CT_OVERRIDE_SOVERSION "Fix shared library SONAME version"                                        OFF)
++option(AFF3CT_OVERRIDE_SUFFIX    "Use the supplied suffix to executable and library names"                  OFF)
++
++if (AFF3CT_OVERRIDE_SUFFIX)
++    set(AFF3CT_EXE_SUFFIX "-${AFF3CT_OVERRIDE_SUFFIX}")
++    set(AFF3CT_LIB_SUFFIX "-${AFF3CT_OVERRIDE_SUFFIX}")
++endif()
+ 
+ if (AFF3CT_COMPILE_EXE OR AFF3CT_COMPILE_STATIC_LIB OR AFF3CT_COMPILE_SHARED_LIB)
+     set(AFF3CT_COMPILE_OBJ ON)
+@@ -125,7 +131,7 @@
+ # Auto generate cmake config version file to link with AFF3CT library (only if an AFF3CT library has been compiled)
+ if (AFF3CT_COMPILE_STATIC_LIB OR AFF3CT_COMPILE_SHARED_LIB)
+     configure_file("${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/aff3ct-config-version.cmake.in"
+-                   "lib/cmake/aff3ct-${AFF3CT_VERSION_FULL}/aff3ct-config-version.cmake" @ONLY)
++                   "lib/cmake/aff3ct-${AFF3CT_VERSION_FULL}/aff3ct${AFF3CT_LIB_SUFFIX}-config-version.cmake" @ONLY)
+ endif()
+ 
+ # ------------------------------------------------------------------------------------------------------------- STRINGS
+@@ -215,7 +221,7 @@
+ if(AFF3CT_COMPILE_EXE)
+     add_executable(aff3ct-bin $<TARGET_OBJECTS:aff3ct-obj> $<TARGET_OBJECTS:aff3ct-core-obj> $<TARGET_OBJECTS:cli-obj>)
+     set_target_properties(aff3ct-bin PROPERTIES
+-                                     OUTPUT_NAME aff3ct-${AFF3CT_VERSION_FULL}
++                                     OUTPUT_NAME aff3ct${AFF3CT_EXE_SUFFIX}-${AFF3CT_VERSION_FULL}
+                                      POSITION_INDEPENDENT_CODE ON) # set -fpie
+     message(STATUS "AFF3CT - Compile: executable")
+ endif(AFF3CT_COMPILE_EXE)
+@@ -224,7 +230,7 @@
+ if(AFF3CT_COMPILE_SHARED_LIB)
+     add_library(aff3ct-shared-lib SHARED $<TARGET_OBJECTS:aff3ct-obj> $<TARGET_OBJECTS:aff3ct-core-obj> $<TARGET_OBJECTS:cli-obj>)
+     set_target_properties(aff3ct-shared-lib PROPERTIES
+-                                            OUTPUT_NAME aff3ct-${AFF3CT_VERSION_FULL}
++                                            OUTPUT_NAME aff3ct${AFF3CT_LIB_SUFFIX}-${AFF3CT_VERSION_FULL}
+                                             POSITION_INDEPENDENT_CODE ON) # set -fpic
+     if(DEFINED AFF3CT_OVERRIDE_SOVERSION)
+         set_property(TARGET aff3ct-shared-lib APPEND PROPERTY SOVERSION ${AFF3CT_OVERRIDE_SOVERSION})
+@@ -234,7 +240,7 @@
+ if(AFF3CT_COMPILE_STATIC_LIB)
+     add_library(aff3ct-static-lib STATIC $<TARGET_OBJECTS:aff3ct-obj> $<TARGET_OBJECTS:aff3ct-core-obj> $<TARGET_OBJECTS:cli-obj>)
+     set_target_properties(aff3ct-static-lib PROPERTIES
+-                                            OUTPUT_NAME aff3ct-${AFF3CT_VERSION_FULL}
++                                            OUTPUT_NAME aff3ct${AFF3CT_LIB_SUFFIX}-${AFF3CT_VERSION_FULL}
+                                             POSITION_INDEPENDENT_CODE ON) # set -fpic
+     message(STATUS "AFF3CT - Compile: static library")
+ endif(AFF3CT_COMPILE_STATIC_LIB)
+@@ -490,14 +496,14 @@
+     export(TARGETS
+            aff3ct-shared-lib
+            NAMESPACE aff3ct::
+-           FILE "lib/cmake/aff3ct-${AFF3CT_VERSION_FULL}/aff3ct-config.cmake")
++           FILE "lib/cmake/aff3ct-${AFF3CT_VERSION_FULL}/aff3ct${AFF3CT_LIB_SUFFIX}-config.cmake")
+ endif()
+ 
+ if (AFF3CT_COMPILE_STATIC_LIB AND NOT AFF3CT_COMPILE_SHARED_LIB)
+     export(TARGETS
+            aff3ct-static-lib
+            NAMESPACE aff3ct::
+-           FILE "lib/cmake/aff3ct-${AFF3CT_VERSION_FULL}/aff3ct-config.cmake")
++           FILE "lib/cmake/aff3ct-${AFF3CT_VERSION_FULL}/aff3ct${AFF3CT_LIB_SUFFIX}-config.cmake")
+ endif()
+ 
+ if(AFF3CT_COMPILE_SHARED_LIB AND AFF3CT_COMPILE_STATIC_LIB)
+@@ -505,7 +511,7 @@
+            aff3ct-shared-lib
+            aff3ct-static-lib
+            NAMESPACE aff3ct::
+-           FILE "lib/cmake/aff3ct-${AFF3CT_VERSION_FULL}/aff3ct-config.cmake")
++           FILE "lib/cmake/aff3ct-${AFF3CT_VERSION_FULL}/aff3ct${AFF3CT_LIB_SUFFIX}-config.cmake")
+ endif()
+ 
+ # ---------------------------------------------------------------------------------------------------------------------
+@@ -518,6 +524,7 @@
+             COMPONENT simulator)
+     if(UNIX)
+         install(FILES "${CMAKE_CURRENT_BINARY_DIR}/bin/aff3ct" DESTINATION ${CMAKE_INSTALL_BINDIR}/
++                RENAME "aff3ct${AFF3CT_EXE_SUFFIX}"
+                 PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
+                 COMPONENT simulator)
+     endif()
+@@ -525,32 +532,32 @@
+ if(AFF3CT_COMPILE_SHARED_LIB)
+     if(WIN32)
+         install(TARGETS aff3ct-shared-lib
+-                EXPORT aff3ct-config
++                EXPORT aff3ct${AFF3CT_LIB_SUFFIX}-config
+                 RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR}/
+                 LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/
+                 COMPONENT library)
+     else()
+         install(TARGETS aff3ct-shared-lib
+-                EXPORT aff3ct-config
++                EXPORT aff3ct${AFF3CT_LIB_SUFFIX}-config
+                 LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/
+                 COMPONENT library)
+     endif()
+ endif()
+ if(AFF3CT_COMPILE_STATIC_LIB)
+     install(TARGETS aff3ct-static-lib
+-            EXPORT aff3ct-config
++            EXPORT aff3ct${AFF3CT_LIB_SUFFIX}-config
+             ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}/
+             COMPONENT library)
+ endif()
+ 
+ if (AFF3CT_COMPILE_SHARED_LIB OR AFF3CT_COMPILE_STATIC_LIB)
+     install(EXPORT
+-            aff3ct-config
++            aff3ct${AFF3CT_LIB_SUFFIX}-config
+             DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/aff3ct-${AFF3CT_VERSION_FULL}/"
+             NAMESPACE aff3ct::
+             COMPONENT library)
+ 
+-    install(FILES "${CMAKE_CURRENT_BINARY_DIR}/lib/cmake/aff3ct-${AFF3CT_VERSION_FULL}/aff3ct-config-version.cmake"
++    install(FILES "${CMAKE_CURRENT_BINARY_DIR}/lib/cmake/aff3ct-${AFF3CT_VERSION_FULL}/aff3ct${AFF3CT_LIB_SUFFIX}-config-version.cmake"
+             DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/aff3ct-${AFF3CT_VERSION_FULL}/"
+             COMPONENT library)
+ 
+--- a/scripts/aff3ct
++++ b/scripts/aff3ct
+@@ -10,14 +10,14 @@
+ 
+ AFF3CT_PATH=$DIR
+ 
+-ls -lrt $AFF3CT_PATH/aff3ct-* > /dev/null 2>&1
++ls -lrt $AFF3CT_PATH/aff3ct@AFF3CT_EXE_SUFFIX@-* > /dev/null 2>&1
+ 
+ if [ $? -gt 0 ]; then
+ 	echo "There is no AFF3CT binary installed on the system (AFF3CT_PATH='$AFF3CT_PATH')."
+ 	exit 1
+ fi
+ 
+-BIN=$(ls -lrt $AFF3CT_PATH/aff3ct-* | tail -n 1 | rev | cut -d" " -f1 | rev)
++BIN=$(ls -lrt $AFF3CT_PATH/aff3ct@AFF3CT_EXE_SUFFIX@-* | tail -n 1 | rev | cut -d" " -f1 | rev)
+ 
+ STR=$($BIN "$@" "-v" 2>&1)
+ if [[ $STR == *"mkl_intel"*".so: cannot open shared object file"* ]]; then
