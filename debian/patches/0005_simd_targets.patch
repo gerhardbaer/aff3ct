@@ -1,0 +1,139 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -2,7 +2,7 @@
+ # ------------------------------------------------------------------------------------------------------- CMAKE PROJECT
+ # ---------------------------------------------------------------------------------------------------------------------
+ 
+-cmake_minimum_required(VERSION 3.5)
++cmake_minimum_required(VERSION 3.16)
+ cmake_policy(SET CMP0054 NEW)
+ 
+ if(${CMAKE_VERSION} VERSION_EQUAL "3.14" OR ${CMAKE_VERSION} VERSION_GREATER "3.14")
+@@ -235,6 +235,9 @@
+     add_library(aff3ct-lib-obj OBJECT ${lib_source_files})
+     set_target_properties(aff3ct-lib-obj PROPERTIES
+                                          POSITION_INDEPENDENT_CODE ON) # set -fpic
++
++    target_precompile_headers(aff3ct-lib-obj PRIVATE [["aff3ct-simd.hpp"]])
++    target_precompile_headers(aff3ct-bin-obj REUSE_FROM aff3ct-lib-obj)
+ endif()
+ 
+ # Binary
+--- /dev/null
++++ b/include/aff3ct-simd.hpp
+@@ -0,0 +1,48 @@
++#ifndef AFF3CT_SIMD_HPP
++#define AFF3CT_SIMD_HPP
++
++#undef mipp
++#undef aff3ct
++
++#include "aff3ct-core.hpp"
++namespace aff3ct_core = aff3ct;
++
++#if defined(AFF3CT_SIMD_none)
++#define MIPP_ISA                0
++#define mipp                    mipp_none
++#define aff3ct                  aff3ct_none
++#elif defined(AFF3CT_SIMD_sse4)
++#define MIPP_ISA                MIPP_ISA_X86_64(2)
++#define mipp                    mipp_sse4
++#define aff3ct                  aff3ct_sse4
++#pragma GCC target              ("sse4.2", "sse4.1", "ssse3", "sse3")
++#elif defined(AFF3CT_SIMD_avx2)
++#define MIPP_ISA                MIPP_ISA_X86_64(3)
++#define mipp                    mipp_avx2
++#define aff3ct                  aff3ct_avx2
++#pragma GCC target              ("avx2", "avx", "fma")
++#elif defined(AFF3CT_SIMD_avx512)
++#define MIPP_ISA                MIPP_ISA_X86_64(4)
++#define mipp                    mipp_avx512
++#define aff3ct                  aff3ct_avx512
++#pragma GCC target              ("avx512vl", "avx512dq", "avx512bw")
++#else
++#error "AFF3CT: undefined SIMD target"
++#endif
++
++// Reimport aff3ct-core definitions into SIMD-specific namespace
++namespace aff3ct {
++namespace module {
++using namespace aff3ct_core::module;
++}
++namespace runtime {
++using namespace aff3ct_core::runtime;
++}
++namespace tools {
++using namespace aff3ct_core::tools;
++}
++}
++
++#include "aff3ct.hpp"
++
++#endif /* AFF3CT_SIMD_HPP */
+--- a/lib/MIPP/src/mipp.h
++++ b/lib/MIPP/src/mipp.h
+@@ -34,6 +34,64 @@
+ 
+ #define MIPP
+ 
++#ifndef MIPP_ISA
++#define MIPP_ISA 0
++#endif
++
++#define MIPP_ISA_X86_64(ver) \
++    (0x0100 | ((ver) & 0xff))
++#define MIPP_ISA_X86_64_PREREQ(min_ver) \
++    (((MIPP_ISA & 0xff00) == MIPP_ISA_X86_64(0)) && ((MIPP_ISA & 0xff) >= (min_ver)))
++
++#if defined(__i386__) || defined(__x86_64__)
++#include <x86intrin.h>
++#endif
++
++#if MIPP_ISA_X86_64_PREREQ(2)
++#ifndef __SSE4_2__
++#define __SSE4_2__              1
++#endif
++#ifndef __SSE4_1__
++#define __SSE4_1__              1
++#endif
++#ifndef __SSSE3__
++#define __SSSE3__               1
++#endif
++#ifndef __SSE3__
++#define __SSE3__                1
++#endif
++#endif /* x86-64-v2 ISA */
++
++#if MIPP_ISA_X86_64_PREREQ(3)
++#ifndef __AVX2__
++#define __AVX2__                1
++#endif
++#ifndef __AVX__
++#define __AVX__                 1
++#endif
++#ifndef __FMA__
++#define __FMA__                 1
++#endif
++#endif /* x86-64-v3 ISA */
++
++#if MIPP_ISA_X86_64_PREREQ(4)
++#ifndef __AVX512VL__
++#define __AVX512VL__            1
++#endif
++#ifndef __AVX512DQ__
++#define __AVX512DQ__            1
++#endif
++#ifndef __AVX512CD__
++#define __AVX512CD__            1
++#endif
++#ifndef __AVX512BW__
++#define __AVX512BW__            1
++#endif
++#ifndef __AVX512F__
++#define __AVX512F__             1
++#endif
++#endif /* x86-64-v4 ISA */
++
+ #ifndef MIPP_NO_INTRINSICS
+ #if defined(__ARM_NEON__) || defined(__ARM_NEON)
+ #include <arm_neon.h>

@@ -5,12 +5,26 @@ AFF3CT_SOVERSION = 0
 export AFF3CT_OVERRIDE_VERSION = v$(AFF3CT_VERSION)
 export AFF3CT_CORE_OVERRIDE_VERSION = v0.0.0+git
 
+builddir	:= obj-$(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
+destdir		:= debian/tmp
+
+njobs_parallel	:= $(filter parallel=%,$(DEB_BUILD_OPTIONS))
+NJOBS		:= $(firstword $(patsubst parallel=%,%,$(njobs_parallel)))
+
+SIMD_TARGETS		= none sse4 avx2 avx512
+SIMD_TARGETS_DEPS	= $(foreach simd,$(SIMD_TARGETS),$(builddir)/$(simd).d)
+SIMD_COMPONENTS_	= library simulator # for all SIMD targets
+SIMD_COMPONENTS_none	= configuration references documentation
+SIMD_COMPONENTS_none	+= headers subproject-library
+
 
 %:
 	dh  $@ --parallel --buildsystem=cmake
 
-override_dh_auto_configure: doc/build/html/index.html
-	dh_auto_configure -- \
+override_dh_auto_configure: $(SIMD_TARGETS_DEPS:%.d=%.configured)
+$(builddir)/%.configured:
+	CPPFLAGS="$(CPPFLAGS) -DAFF3CT_SIMD_$(*F)" \
+	dh_auto_configure -B"$(builddir)/$(*F)" -- \
 		-DCMAKE_BUILD_TYPE=Release \
 		-DCLI_COMPILE_SHARED_LIB=ON \
 		-DCLI_COMPILE_STATIC_LIB=OFF \
@@ -19,15 +33,25 @@ override_dh_auto_configure: doc/build/html/index.html
 		-DAFF3CT_CORE_COMPILE_STATIC_LIB=OFF \
 		-DAFF3CT_OVERRIDE_VERSION="$(AFF3CT_OVERRIDE_VERSION)" \
 		-DAFF3CT_OVERRIDE_SOVERSION=$(AFF3CT_SOVERSION) \
+		-DAFF3CT_OVERRIDE_SUFFIX=$(*F) \
 		-DAFF3CT_EXT_STRINGS=OFF \
 		-DAFF3CT_COMPILE_SHARED_LIB=ON \
-		-DAFF3CT_COMPILE_STATIC_LIB=OFF
+		-DAFF3CT_COMPILE_STATIC_LIB=OFF \
+		&& touch $@
 
-override_dh_auto_build:
-	dh_auto_build --parallel
+override_dh_auto_build: $(SIMD_TARGETS_DEPS:%.d=%.built)
+$(builddir)/%.built:
+	dh_auto_build -B"$(builddir)/$(*F)" --parallel \
+		&& touch $@
 
-override_dh_auto_install:
-	dh_auto_install --buildsystem=cmake
+override_dh_auto_install: $(SIMD_TARGETS_DEPS:%.d=%.installed)
+$(builddir)/%.installed:
+	for component in $(SIMD_COMPONENTS_$(filter none,$(*F))); do	\
+	(cd "$(builddir)/$(*F)" && cmake				\
+		-DCMAKE_INSTALL_COMPONENT=$$component			\
+		-DCMAKE_INSTALL_PREFIX="$(CURDIR)/$(destdir)/usr"	\
+		-P cmake_install.cmake);				\
+	done	&& touch $@
 
 # Build documentation (HTML)
 sphinx_prefix	= $(CURDIR)/tools/sphinx
