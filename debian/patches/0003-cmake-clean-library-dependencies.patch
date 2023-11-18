@@ -1,0 +1,131 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -75,7 +75,12 @@
+ set(LIBRARY_OUTPUT_PATH lib/)
+ 
+ # Generate the source files list
+-file(GLOB_RECURSE source_files ${CMAKE_CURRENT_SOURCE_DIR}/src/*)
++file(GLOB_RECURSE _source_files ${CMAKE_CURRENT_SOURCE_DIR}/src/*)
++set(lib_source_files ${_source_files})
++set(bin_source_files ${_source_files})
++set(bin_source_files_regex "/((Launcher|Simulation)/|main.cpp)")
++list(FILTER bin_source_files INCLUDE REGEX "${bin_source_files_regex}")
++list(FILTER lib_source_files EXCLUDE REGEX "${bin_source_files_regex}")
+ 
+ # ---------------------------------------------------------------------------------------------------------------------
+ # ------------------------------------------------------------------------------------------------ GET VERSION FROM GIT
+@@ -126,7 +131,7 @@
+ # Auto generate a header containing the last Git SHA1
+ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/src/Tools/version.cpp.in"
+                "${CMAKE_CURRENT_SOURCE_DIR}/src/Tools/version.cpp" @ONLY)
+-list(APPEND source_files "${CMAKE_CURRENT_SOURCE_DIR}/src/Tools/version.cpp")
++list(APPEND lib_source_files "${CMAKE_CURRENT_SOURCE_DIR}/src/Tools/version.cpp")
+ 
+ # Auto generate cmake config version file to link with AFF3CT library (only if an AFF3CT library has been compiled)
+ if (AFF3CT_COMPILE_STATIC_LIB OR AFF3CT_COMPILE_SHARED_LIB)
+@@ -146,7 +151,7 @@
+     configure_file("${CMAKE_CURRENT_SOURCE_DIR}/src/Tools/Documentation/strings.cpp.in"
+                    "${CMAKE_CURRENT_SOURCE_DIR}/src/Tools/Documentation/strings.cpp" @ONLY)
+ 
+-    list(APPEND source_files "${CMAKE_CURRENT_SOURCE_DIR}/src/Tools/Documentation/strings.cpp")
++    list(APPEND bin_source_files "${CMAKE_CURRENT_SOURCE_DIR}/src/Tools/Documentation/strings.cpp")
+ endif()
+ 
+ # ------------------------------------------------------------------------------------------------------------ SHORTCUT
+@@ -172,7 +177,7 @@
+     endforeach()
+ endfunction(assign_source_group)
+ 
+-assign_source_group(${source_files})
++assign_source_group(${lib_source_files} ${bin_source_files})
+ 
+ # ---------------------------------------------------------------------------------------------------------------------
+ # --------------------------------------------------------------------------------------------------------- SUB-PROJECT
+@@ -212,14 +217,18 @@
+ 
+ # Object
+ if(AFF3CT_COMPILE_OBJ)
+-    add_library(aff3ct-obj OBJECT ${source_files})
+-    set_target_properties(aff3ct-obj PROPERTIES
+-                                     POSITION_INDEPENDENT_CODE ON) # set -fpic
++    add_library(aff3ct-bin-obj OBJECT ${bin_source_files})
++    set_target_properties(aff3ct-bin-obj PROPERTIES
++                                         POSITION_INDEPENDENT_CODE ON) # set -fpic
++
++    add_library(aff3ct-lib-obj OBJECT ${lib_source_files})
++    set_target_properties(aff3ct-lib-obj PROPERTIES
++                                         POSITION_INDEPENDENT_CODE ON) # set -fpic
+ endif()
+ 
+ # Binary
+ if(AFF3CT_COMPILE_EXE)
+-    add_executable(aff3ct-bin $<TARGET_OBJECTS:aff3ct-obj> $<TARGET_OBJECTS:aff3ct-core-obj> $<TARGET_OBJECTS:cli-obj>)
++    add_executable(aff3ct-bin $<TARGET_OBJECTS:aff3ct-bin-obj> $<TARGET_OBJECTS:aff3ct-core-obj> $<TARGET_OBJECTS:cli-obj>)
+     set_target_properties(aff3ct-bin PROPERTIES
+                                      OUTPUT_NAME aff3ct${AFF3CT_EXE_SUFFIX}-${AFF3CT_VERSION_FULL}
+                                      POSITION_INDEPENDENT_CODE ON) # set -fpie
+@@ -228,7 +237,7 @@
+ 
+ # Library
+ if(AFF3CT_COMPILE_SHARED_LIB)
+-    add_library(aff3ct-shared-lib SHARED $<TARGET_OBJECTS:aff3ct-obj> $<TARGET_OBJECTS:aff3ct-core-obj> $<TARGET_OBJECTS:cli-obj>)
++    add_library(aff3ct-shared-lib SHARED $<TARGET_OBJECTS:aff3ct-lib-obj> $<TARGET_OBJECTS:aff3ct-core-obj> $<TARGET_OBJECTS:cli-obj>)
+     set_target_properties(aff3ct-shared-lib PROPERTIES
+                                             OUTPUT_NAME aff3ct${AFF3CT_LIB_SUFFIX}-${AFF3CT_VERSION_FULL}
+                                             POSITION_INDEPENDENT_CODE ON) # set -fpic
+@@ -238,13 +247,22 @@
+     message(STATUS "AFF3CT - Compile: shared library")
+ endif(AFF3CT_COMPILE_SHARED_LIB)
+ if(AFF3CT_COMPILE_STATIC_LIB)
+-    add_library(aff3ct-static-lib STATIC $<TARGET_OBJECTS:aff3ct-obj> $<TARGET_OBJECTS:aff3ct-core-obj> $<TARGET_OBJECTS:cli-obj>)
++    add_library(aff3ct-static-lib STATIC $<TARGET_OBJECTS:aff3ct-lib-obj> $<TARGET_OBJECTS:aff3ct-core-obj> $<TARGET_OBJECTS:cli-obj>)
+     set_target_properties(aff3ct-static-lib PROPERTIES
+                                             OUTPUT_NAME aff3ct${AFF3CT_LIB_SUFFIX}-${AFF3CT_VERSION_FULL}
+                                             POSITION_INDEPENDENT_CODE ON) # set -fpic
+     message(STATUS "AFF3CT - Compile: static library")
+ endif(AFF3CT_COMPILE_STATIC_LIB)
+ 
++# Dynamic link to shared library, if necessary
++if(AFF3CT_COMPILE_SHARED_LIB)
++    target_link_libraries(aff3ct-bin PRIVATE aff3ct-shared-lib)
++elseif(AFF3CT_COMPILE_STATIC_LIB)
++    target_link_libraries(aff3ct-bin PRIVATE aff3ct-static-lib)
++else()
++    target_sources(aff3ct-bin PRIVATE ${lib_source_files})
++endif()
++
+ # PPA uploading
+ if (AFF3CT_UPLOAD_PPA)
+     message(STATUS "AFF3CT - PPA uploading: on")
+@@ -256,7 +274,8 @@
+ 
+ macro(aff3ct_target_compile_definitions privacy def)
+     if(AFF3CT_COMPILE_OBJ)
+-        target_compile_definitions(aff3ct-obj ${privacy} $<BUILD_INTERFACE:${def}> $<INSTALL_INTERFACE:${def}>)
++        target_compile_definitions(aff3ct-bin-obj ${privacy} $<BUILD_INTERFACE:${def}> $<INSTALL_INTERFACE:${def}>)
++        target_compile_definitions(aff3ct-lib-obj ${privacy} $<BUILD_INTERFACE:${def}> $<INSTALL_INTERFACE:${def}>)
+     endif()
+     if(AFF3CT_COMPILE_EXE)
+         target_compile_definitions(aff3ct-bin ${privacy} $<BUILD_INTERFACE:${def}> $<INSTALL_INTERFACE:${def}>)
+@@ -328,7 +347,10 @@
+ 
+ macro(aff3ct_target_include_directories privacy dir_build dir_install)
+     if(AFF3CT_COMPILE_OBJ)
+-        target_include_directories(aff3ct-obj ${privacy}
++        target_include_directories(aff3ct-bin-obj ${privacy}
++                                   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/${dir_build}/>
++                                   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/aff3ct-${AFF3CT_VERSION_FULL}/${dir_install}>)
++        target_include_directories(aff3ct-lib-obj ${privacy}
+                                    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/${dir_build}/>
+                                    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/aff3ct-${AFF3CT_VERSION_FULL}/${dir_install}>)
+     endif()
+@@ -351,7 +373,8 @@
+ 
+ macro(aff3ct_target_include_directories2 privacy dir)
+     if(AFF3CT_COMPILE_OBJ)
+-        target_include_directories(aff3ct-obj ${privacy} $<BUILD_INTERFACE:${dir}> $<INSTALL_INTERFACE:${dir}>)
++        target_include_directories(aff3ct-bin-obj ${privacy} $<BUILD_INTERFACE:${dir}> $<INSTALL_INTERFACE:${dir}>)
++        target_include_directories(aff3ct-lib-obj ${privacy} $<BUILD_INTERFACE:${dir}> $<INSTALL_INTERFACE:${dir}>)
+     endif()
+     if(AFF3CT_COMPILE_EXE)
+         target_include_directories(aff3ct-bin ${privacy} $<BUILD_INTERFACE:${dir}> $<INSTALL_INTERFACE:${dir}>)
