@@ -2,3 +2,4 @@
 0002-cmake-allow-suffixes-to-executables-and-libraries.patch
 0003-cmake-clean-library-dependencies.patch
 0004-cmake-subproject-shared-libs.patch
+0005_simd_targets.patch
