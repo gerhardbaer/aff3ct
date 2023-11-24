@@ -1,3 +1,4 @@
 0001-cmake-allow-for-SOVERSION-to-be-overriden.patch
 0002-cmake-allow-suffixes-to-executables-and-libraries.patch
 0003-cmake-clean-library-dependencies.patch
+0004-cmake-subproject-shared-libs.patch
