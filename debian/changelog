@@ -1,3 +1,10 @@
+aff3ct (3.0.2+git20231208.9a56428-1) unstable; urgency=medium
+
+  * Update to git 2023/12/08 (9a56428) from the development branch.
+  * Ship multiple SIMD variants of the shared library (sse4, avx2, avx512).
+
+ -- Gerhard Baer <Gerhard.Baer@protonmail.com>  Tue, 12 Dec 2023 18:14:03 +0100
+
 aff3ct (3.0.2+git20231103.7409f4c-1) unstable; urgency=medium
 
   * Initial package from development branch (2023/11/03).
