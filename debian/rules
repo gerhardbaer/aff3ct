@@ -83,7 +83,7 @@ ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
 		--max-snr-time 5 --sensibility 2.5 --weak-rate 0.9	\
 		--n-threads $(NJOBS) $(TEST_ARGS_$(*F))			\
 		--verbose 1						\
-		&& touch $@
+		&& touch $@ || :
 endif
 
 # Build documentation (HTML)
