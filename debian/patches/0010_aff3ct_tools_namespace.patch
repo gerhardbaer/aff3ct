@@ -1,0 +1,42 @@
+commit b273e30c8f7fc65a77332616e6be0b3fc56fbc6d
+Author: Gerhard Baer <Gerhard.Baer@protonmail.com>
+Date:   Wed Jan 24 14:30:06 2024 +0100
+
+    Boolean_diff: move common utilities into aff3ct::tools namespace.
+    
+    Move boolean_diff_*() template functions into the aff3ct::tools
+    namespace instead of the global one.
+    
+    Signed-off-by: Gerhard Baer <Gerhard.Baer@protonmail.com>
+
+diff --git a/include/Tools/Perf/distance/Boolean_diff.hxx b/include/Tools/Perf/distance/Boolean_diff.hxx
+index d7a3d5a09..7c5596eaa 100644
+--- a/include/Tools/Perf/distance/Boolean_diff.hxx
++++ b/include/Tools/Perf/distance/Boolean_diff.hxx
+@@ -6,6 +6,11 @@
+ #include "Tools/Noise/noise_utils.h"
+ #include "Tools/Perf/distance/Boolean_diff.h"
+ 
++namespace aff3ct
++{
++namespace tools
++{
++
+ //************************************************************************************** common functions for real types
+ 
+ template <typename R>
+@@ -69,14 +74,6 @@ mipp::Reg<R> boolean_diff_unk_sign(const mipp::Reg<R>& in1, const mipp::Reg<R>&
+ 	return mipp::blend(ones, zeros, m_in);
+ }
+ 
+-
+-
+-
+-namespace aff3ct
+-{
+-namespace tools
+-{
+-
+ //******************************************************** type T is integral type (B) and count_unknown_symbols = false
+ template<typename B, bool cus>
+ mipp::Reg<B> Boolean_diff<B,cus>

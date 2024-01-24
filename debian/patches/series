@@ -3,3 +3,5 @@
 0003-cmake-clean-library-dependencies.patch
 0004-cmake-subproject-shared-libs.patch
 0005_simd_targets.patch
+0010_aff3ct_tools_namespace.patch
+0011_sphinxcontrib_applehelp.patch

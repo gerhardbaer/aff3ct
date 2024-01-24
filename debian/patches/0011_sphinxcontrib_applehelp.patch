@@ -1,0 +1,28 @@
+commit 0ce9f0e38b4b8da2788d2bd388e8c3bf737a48c1
+Author: Gerhard Baer <Gerhard.Baer@protonmail.com>
+Date:   Wed Jan 24 17:43:33 2024 +0100
+
+    Doc: fix build requirements.
+    
+    Ensure suitable dependencies are installed for Sphinx v4.5. This implies
+    downgrading some requirements that now depend on Sphinx >= v5.0.
+    
+    Signed-off-by: Gerhard Baer <Gerhard.Baer@protonmail.com>
+
+diff --git a/doc/requirements.txt b/doc/requirements.txt
+index bb63724b0..7610246b3 100644
+--- a/doc/requirements.txt
++++ b/doc/requirements.txt
+@@ -2,7 +2,12 @@ mkdocs==1.5.3
+ jinja2==3.0.0
+ Sphinx==4.5.0
+ sphinx-rtd-theme==1.3.0
++sphinxcontrib-applehelp==1.0.4
+ sphinxcontrib-bibtex==2.6.1
++sphinxcontrib-devhelp==1.0.2
++sphinxcontrib-htmlhelp==2.0.1
++sphinxcontrib-qthelp==1.0.3
++sphinxcontrib-serializinghtml==1.1.5
+ sphinxcontrib-websupport==1.2.3
+ sphinxcontrib-svg2pdfconverter==1.2.2
+ breathe==4.35.0
