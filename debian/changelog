@@ -1,6 +1,7 @@
 aff3ct (3.0.2+git20240130.6f1d3b7-1) unstable; urgency=medium
 
   * Update to git 2024/01/30 (6f1d3b7) from the development branch.
+  * Run testsuite through Intel SDE if necessary, e.g. AVX512 variant.
 
  -- Gerhard Baer <Gerhard.Baer@protonmail.com>  Thu, 22 Feb 2024 09:02:59 +0100
 
