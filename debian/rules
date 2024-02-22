@@ -5,6 +5,13 @@ AFF3CT_SOVERSION = 0
 export AFF3CT_OVERRIDE_VERSION = v$(AFF3CT_VERSION)
 export AFF3CT_CORE_OVERRIDE_VERSION = v0.0.0+git
 
+# Intel Software Development Emulator (SDE)
+SDE_VERSION		= 9.33.0-2024-01-07
+SDE_PACKAGE		= sde-external-$(SDE_VERSION)-lin
+SDE_MODEL_sse4		= snb # Intel Sandybridge
+SDE_MODEL_avx2		= hsw # Intel Haswell
+SDE_MODEL_avx512	= skx # Intel Skylake Server
+
 builddir	:= obj-$(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
 destdir		:= debian/tmp
 
@@ -101,13 +108,25 @@ $(sphinx_prefix)/bin/activate:
 	python3 -m venv $(sphinx_prefix)
 
 # Run regression tests
+sde_prefix	= $(CURDIR)/tools/$(SDE_PACKAGE)
+sde_bin		= $(sde_prefix)/sde64
+
 test-regression: $(TEST_TARGETS_DEPS:%.d=%.tested)
-$(builddir)/%/bin/aff3ct-test.sh: $(builddir)/%
+$(builddir)/%/bin/aff3ct-test.sh: $(builddir)/% $(sde_bin)
 	aff3ct_bin=$(CURDIR)/$(@D)/aff3ct-$(<F)-$(AFF3CT_VERSION) ;	\
 	grep -q " $(<F)" /proc/cpuinfo					\
-		|| RUNTIME=/bin/false ;					\
+		|| RUNTIME="$(sde_bin) -$(SDE_MODEL_$(<F)) --" ;	\
 	[ "$(<F)" = "none" ]						\
 		&& RUNTIME=/bin/false ;					\
 	echo "#!/bin/bash"					 > $@ ;	\
 	echo "exec $$RUNTIME $$aff3ct_bin" '$${1+"$$@"}'	>> $@
 	chmod +x $@
+
+$(sde_bin): $(sde_bin).installed
+	$@ --version
+$(sde_bin).installed: $(CURDIR)/ext/files/$(SDE_PACKAGE).tar.xz
+	@mkdir -p $(@D) && cd $(@D)/.. && \
+	tar Jxf $< && touch $@
+$(CURDIR)/ext/files/$(SDE_PACKAGE).tar.xz:
+	@mkdir -p $(@D) && cd $(@D) && \
+	wget https://downloadmirror.intel.com/813591/$(SDE_PACKAGE).tar.xz
