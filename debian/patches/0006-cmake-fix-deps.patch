@@ -1,0 +1,69 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -206,6 +206,14 @@
+                         "$ git submodule update --init --recursive")
+ endif()
+ 
++add_library(aff3ct-cli-obj ALIAS cli-obj)
++if(CLI_COMPILE_SHARED_LIB)
++  add_library(aff3ct-cli-shared-lib ALIAS cli-shared-lib)
++endif()
++if(CLI_COMPILE_STATIC_LIB)
++  add_library(aff3ct-cli-static-lib ALIAS cli-static-lib)
++endif()
++
+ # ---------------------------------------------------------------------------------------------------------------------
+ # ---------------------------------------------------------------------------------------------------- OBJECTS/LIBS/EXE
+ # ---------------------------------------------------------------------------------------------------------------------
+@@ -216,13 +224,13 @@
+ endif()
+ 
+ # Append {shared,static}-library or target objects
+-function(append_subproject TARGET SUBPROJECT SUBPROJECT_VAR ALLOW_SHARED_LIB)
++function(append_subproject TARGET PRIVACY SUBPROJECT SUBPROJECT_VAR ALLOW_SHARED_LIB)
+     if(${${SUBPROJECT_VAR}_COMPILE_SHARED_LIB} AND ${ALLOW_SHARED_LIB})
+-        target_link_libraries(${TARGET} PRIVATE ${SUBPROJECT}-shared-lib)
+-    elseif(CLI_COMPILE_STATIC_LIB)
+-        target_link_libraries(${TARGET} PRIVATE ${SUBPROJECT}-static-lib)
++        target_link_libraries(${TARGET} ${PRIVACY} $<BUILD_INTERFACE:${SUBPROJECT}-shared-lib> $<INSTALL_INTERFACE:-l${SUBPROJECT}>)
++    elseif(${${SUUBPROJECT_VAR}_COMPILE_STATIC_LIB})
++        target_link_libraries(${TARGET} ${PRIVACY} $<BUILD_INTERFACE:${SUBPROJECT}-static-lib> $<INSTALL_INTERFACE:-l${SUBPROJECT}>)
+     else()
+-        target_sources(${TARGET} PRIVATE $<TARGET_OBJECTS:${SUBPROJECT}-obj>)
++        target_sources(${TARGET} ${PRIVACY} $<TARGET_OBJECTS:${SUBPROJECT}-obj>)
+     endif()
+ endfunction()
+ 
+@@ -243,8 +251,8 @@
+ # Binary
+ if(AFF3CT_COMPILE_EXE)
+     add_executable(aff3ct-bin $<TARGET_OBJECTS:aff3ct-bin-obj>)
+-    append_subproject(aff3ct-bin aff3ct-core AFF3CT_CORE ON)
+-    append_subproject(aff3ct-bin cli CLI ON)
++    append_subproject(aff3ct-bin PRIVATE aff3ct-core AFF3CT_CORE ON)
++    append_subproject(aff3ct-bin PRIVATE aff3ct-cli CLI ON)
+     set_target_properties(aff3ct-bin PROPERTIES
+                                      OUTPUT_NAME aff3ct${AFF3CT_EXE_SUFFIX}-${AFF3CT_VERSION_FULL}
+                                      POSITION_INDEPENDENT_CODE ON) # set -fpie
+@@ -254,8 +262,8 @@
+ # Library
+ if(AFF3CT_COMPILE_SHARED_LIB)
+     add_library(aff3ct-shared-lib SHARED $<TARGET_OBJECTS:aff3ct-lib-obj>)
+-    append_subproject(aff3ct-shared-lib aff3ct-core AFF3CT_CORE ON)
+-    append_subproject(aff3ct-shared-lib cli CLI ON)
++    append_subproject(aff3ct-shared-lib PUBLIC aff3ct-core AFF3CT_CORE ON)
++    append_subproject(aff3ct-shared-lib PUBLIC aff3ct-cli CLI ON)
+     set_target_properties(aff3ct-shared-lib PROPERTIES
+                                             OUTPUT_NAME aff3ct${AFF3CT_LIB_SUFFIX}-${AFF3CT_VERSION_FULL}
+                                             POSITION_INDEPENDENT_CODE ON) # set -fpic
+@@ -266,8 +274,8 @@
+ endif(AFF3CT_COMPILE_SHARED_LIB)
+ if(AFF3CT_COMPILE_STATIC_LIB)
+     add_library(aff3ct-static-lib STATIC $<TARGET_OBJECTS:aff3ct-lib-obj>)
+-    append_subproject(aff3ct-static-lib aff3ct-core AFF3CT_CORE OFF)
+-    append_subproject(aff3ct-static-lib cli CLI OFF)
++    append_subproject(aff3ct-static-lib PUBLIC aff3ct-core AFF3CT_CORE OFF)
++    append_subproject(aff3ct-static-lib PUBLIC aff3ct-cli CLI OFF)
+     set_target_properties(aff3ct-static-lib PROPERTIES
+                                             OUTPUT_NAME aff3ct${AFF3CT_LIB_SUFFIX}-${AFF3CT_VERSION_FULL}
+                                             POSITION_INDEPENDENT_CODE ON) # set -fpic
