@@ -174,8 +174,8 @@
 +#endif /* x86-64-v4 ISA */
 +
  #ifndef MIPP_NO_INTRINSICS
- #if defined(__ARM_NEON__) || defined(__ARM_NEON)
- #include <arm_neon.h>
+ #if defined(__ARM_FEATURE_SVE)
+ #include <arm_sve.h>
 --- /dev/null
 +++ b/include/aff3ct-simd-undef.hpp
 @@ -0,0 +1,454 @@
