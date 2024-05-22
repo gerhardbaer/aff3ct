@@ -4,3 +4,4 @@
 0004-cmake-subproject-shared-libs.patch
 0005_simd_targets.patch
 0006-cmake-fix-deps.patch
+0007-cmake-installdir.patch
