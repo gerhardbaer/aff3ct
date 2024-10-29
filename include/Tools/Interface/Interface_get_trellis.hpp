@@ -13,9 +13,8 @@ namespace tools
 {
 class Interface_get_trellis
 {
-public:
-	virtual std::vector<std::vector<int>> get_trellis() = 0;
-
+  public:
+    virtual std::vector<std::vector<int>> get_trellis() = 0;
 };
 }
 }

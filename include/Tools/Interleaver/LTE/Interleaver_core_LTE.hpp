@@ -13,22 +13,22 @@ namespace aff3ct
 {
 namespace tools
 {
-template <typename T = uint32_t>
+template<typename T = uint32_t>
 class Interleaver_core_LTE : public Interleaver_core<T>
 {
-public:
-	Interleaver_core_LTE(const int size);
-	virtual ~Interleaver_core_LTE() = default;
+  public:
+    Interleaver_core_LTE(const int size);
+    virtual ~Interleaver_core_LTE() = default;
 
-	virtual Interleaver_core_LTE<T>* clone() const;
+    virtual Interleaver_core_LTE<T>* clone() const;
 
-protected:
-	void gen_lut(T *lut, const size_t frame_id);
+  protected:
+    void gen_lut(T* lut, const size_t frame_id);
 
-private:
-	static inline int pi_LTE(const int &i, const int &f_1, const int &f_2, const int &K);
+  private:
+    static inline int pi_LTE(const int& i, const int& f_1, const int& f_2, const int& K);
 };
 }
 }
 
-#endif	/* INTERLEAVER_CORE_LTE_HPP */
+#endif /* INTERLEAVER_CORE_LTE_HPP */

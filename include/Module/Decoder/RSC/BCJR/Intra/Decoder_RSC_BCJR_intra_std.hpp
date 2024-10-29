@@ -7,28 +7,28 @@
 
 #include <vector>
 
-#include "Tools/Math/max.h"
 #include "Module/Decoder/RSC/BCJR/Intra/Decoder_RSC_BCJR_intra.hpp"
+#include "Tools/Math/max.h"
 
 namespace aff3ct
 {
 namespace module
 {
-template <typename B = int, typename R = float, tools::proto_max_i<R> MAX = tools::max_i>
-class Decoder_RSC_BCJR_intra_std : public Decoder_RSC_BCJR_intra<B,R>
+template<typename B = int, typename R = float, tools::proto_max_i<R> MAX = tools::max_i>
+class Decoder_RSC_BCJR_intra_std : public Decoder_RSC_BCJR_intra<B, R>
 {
-public:
-	Decoder_RSC_BCJR_intra_std(const int &K,
-	                           const std::vector<std::vector<int>> &trellis,
-	                           const bool buffered_encoding = true);
-	virtual ~Decoder_RSC_BCJR_intra_std() = default;
+  public:
+    Decoder_RSC_BCJR_intra_std(const int& K,
+                               const std::vector<std::vector<int>>& trellis,
+                               const bool buffered_encoding = true);
+    virtual ~Decoder_RSC_BCJR_intra_std() = default;
 
-	virtual Decoder_RSC_BCJR_intra_std<B,R,MAX>* clone() const;
+    virtual Decoder_RSC_BCJR_intra_std<B, R, MAX>* clone() const;
 
-protected:
-	void compute_gamma   (const R *sys, const R *par);
-	void compute_alpha   (                          );
-	void compute_beta_ext(const R *sys,       R *ext);
+  protected:
+    void compute_gamma(const R* sys, const R* par);
+    void compute_alpha();
+    void compute_beta_ext(const R* sys, R* ext);
 };
 }
 }

@@ -394,6 +394,9 @@
 .. |factory::Decoder_RSC::p+std| replace::
    Select a standard.
 
+.. |factory::Decoder_RSC::p+lists,L| replace::
+   Set the number of lists to maintain in the |PLVA| decoder.
+
 .. ------------------------------------------ factory Decoder_RSC_DB parameters
 
 .. |factory::Decoder_RSC_DB::p+max| replace::

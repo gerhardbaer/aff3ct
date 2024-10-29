@@ -1,48 +1,49 @@
-#include <string>
 #include <algorithm>
+#include <streampu.hpp>
+#include <string>
 
-#include "Tools/Exception/exception.hpp"
 #include "Module/Encoder/AZCW/Encoder_AZCW.hpp"
 
 using namespace aff3ct::module;
 
-template <typename B>
-Encoder_AZCW<B>
-::Encoder_AZCW(const int K, const int N)
-: Encoder<B>(K, N)
+template<typename B>
+Encoder_AZCW<B>::Encoder_AZCW(const int K, const int N)
+  : Encoder<B>(K, N)
 {
-	const std::string name = "Encoder_AZCW";
-	this->set_name(name);
+    const std::string name = "Encoder_AZCW";
+    this->set_name(name);
+    for (auto& t : this->tasks)
+        t->set_replicability(true);
 }
 
-template <typename B>
-Encoder_AZCW<B>* Encoder_AZCW<B>
-::clone() const
+template<typename B>
+Encoder_AZCW<B>*
+Encoder_AZCW<B>::clone() const
 {
-	auto m = new Encoder_AZCW(*this);
-	m->deep_copy(*this);
-	return m;
+    auto m = new Encoder_AZCW(*this);
+    m->deep_copy(*this);
+    return m;
 }
 
-template <typename B>
-void Encoder_AZCW<B>
-::_encode(const B *U_K, B *X_N, const size_t frame_id)
+template<typename B>
+void
+Encoder_AZCW<B>::_encode(const B* U_K, B* X_N, const size_t frame_id)
 {
-	std::fill(X_N, X_N + this->N, (B)0);
+    std::fill(X_N, X_N + this->N, (B)0);
 }
 
-template <typename B>
-const std::vector<uint32_t>& Encoder_AZCW<B>
-::get_info_bits_pos() const
+template<typename B>
+const std::vector<uint32_t>&
+Encoder_AZCW<B>::get_info_bits_pos() const
 {
-	throw tools::unimplemented_error(__FILE__, __LINE__, __func__);
+    throw spu::tools::unimplemented_error(__FILE__, __LINE__, __func__);
 }
 
-template <typename B>
-bool Encoder_AZCW<B>
-::is_sys() const
+template<typename B>
+bool
+Encoder_AZCW<B>::is_sys() const
 {
-	throw tools::unimplemented_error(__FILE__, __LINE__, __func__);
+    throw spu::tools::unimplemented_error(__FILE__, __LINE__, __func__);
 }
 
 // ==================================================================================== explicit template instantiation

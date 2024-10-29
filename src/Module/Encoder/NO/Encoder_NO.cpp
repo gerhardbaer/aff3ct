@@ -4,36 +4,37 @@
 
 using namespace aff3ct::module;
 
-template <typename B>
-Encoder_NO<B>
-::Encoder_NO(const int K)
-: Encoder<B>(K, K)
+template<typename B>
+Encoder_NO<B>::Encoder_NO(const int K)
+  : Encoder<B>(K, K)
 {
-	const std::string name = "Encoder_NO";
-	this->set_name(name);
+    const std::string name = "Encoder_NO";
+    this->set_name(name);
+    for (auto& t : this->tasks)
+        t->set_replicability(true);
 }
 
-template <typename B>
-Encoder_NO<B>* Encoder_NO<B>
-::clone() const
+template<typename B>
+Encoder_NO<B>*
+Encoder_NO<B>::clone() const
 {
-	auto m = new Encoder_NO(*this);
-	m->deep_copy(*this);
-	return m;
+    auto m = new Encoder_NO(*this);
+    m->deep_copy(*this);
+    return m;
 }
 
-template <typename B>
-void Encoder_NO<B>
-::_encode(const B *U_K, B *X_K, const size_t frame_id)
+template<typename B>
+void
+Encoder_NO<B>::_encode(const B* U_K, B* X_K, const size_t frame_id)
 {
-	std::copy(U_K, U_K + this->K, X_K);
+    std::copy(U_K, U_K + this->K, X_K);
 }
 
-template <typename B>
-bool Encoder_NO<B>
-::is_codeword(const B *X_K)
+template<typename B>
+bool
+Encoder_NO<B>::is_codeword(const B* X_K)
 {
-	return true;
+    return true;
 }
 
 // ==================================================================================== explicit template instantiation

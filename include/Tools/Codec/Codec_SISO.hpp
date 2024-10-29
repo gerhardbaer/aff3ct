@@ -14,27 +14,27 @@ namespace aff3ct
 {
 namespace tools
 {
-template <typename B = int, typename Q = float>
-class Codec_SISO : public Codec_SIHO<B,Q>
+template<typename B = int, typename Q = float>
+class Codec_SISO : public Codec_SIHO<B, Q>
 {
-protected:
-	std::shared_ptr<module::Decoder_SISO<B,Q>> decoder_siso;
+  protected:
+    std::shared_ptr<module::Decoder_SISO<B, Q>> decoder_siso;
 
-public:
-	Codec_SISO(const int K, const int N_cw, const int N);
+  public:
+    Codec_SISO(const int K, const int N_cw, const int N);
 
-	virtual ~Codec_SISO() = default;
+    virtual ~Codec_SISO() = default;
 
-	virtual Codec_SISO<B,Q>* clone() const;
+    virtual Codec_SISO<B, Q>* clone() const;
 
-	module::Decoder_SISO<B,Q>& get_decoder_siso();
+    module::Decoder_SISO<B, Q>& get_decoder_siso();
 
-	virtual void set_n_frames(const size_t n_frames);
+    virtual void set_n_frames(const size_t n_frames);
 
-protected:
-	void deep_copy(const Codec_SISO<B,Q> &t);
-	void set_decoder_siso(module::Decoder_SISO<B,Q>* dec);
-	void set_decoder_siso(std::shared_ptr<module::Decoder_SISO<B,Q>> dec);
+  protected:
+    void deep_copy(const Codec_SISO<B, Q>& t);
+    void set_decoder_siso(module::Decoder_SISO<B, Q>* dec);
+    void set_decoder_siso(std::shared_ptr<module::Decoder_SISO<B, Q>> dec);
 };
 }
 }

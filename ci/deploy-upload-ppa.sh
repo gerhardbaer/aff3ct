@@ -43,7 +43,7 @@ then
 	NAME="build_deploy_upload_ppa"
 fi
 
-if [ "$GIT_BRANCH" = "development" ]
+if [ "$GIT_BRANCH" = "develop" ]
 then
 	DPUT_HOST="ppa:aff3ct/aff3ct-dev"
 elif [ "$GIT_BRANCH" = "master" ]
@@ -53,7 +53,7 @@ elif [ "$GIT_BRANCH" = "ppa_upload" ]
 then
 	DPUT_HOST="ppa:aff3ct/aff3ct-dev"
 else
-	echo "Deploy upload ppa must be run only on master or development branch."
+	echo "Deploy upload ppa must be run only on master or develop branch."
 	exit 1
 fi
 

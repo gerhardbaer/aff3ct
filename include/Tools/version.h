@@ -11,11 +11,16 @@ namespace aff3ct
 {
 namespace tools
 {
-std::string sha1           ();
-std::string version        ();
-int         version_major  ();
-int         version_minor  ();
-int         version_release();
+std::string
+sha1();
+std::string
+version();
+int
+version_major();
+int
+version_minor();
+int
+version_release();
 }
 }
 

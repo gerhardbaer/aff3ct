@@ -14,21 +14,21 @@ namespace aff3ct
 {
 namespace module
 {
-template <typename B = int>
+template<typename B = int>
 class Encoder_AZCW : public Encoder<B>
 {
-public:
-	Encoder_AZCW(const int K, const int N);
-	virtual ~Encoder_AZCW() = default;
+  public:
+    Encoder_AZCW(const int K, const int N);
+    virtual ~Encoder_AZCW() = default;
 
-	virtual Encoder_AZCW<B>* clone() const;
+    virtual Encoder_AZCW<B>* clone() const;
 
-	const std::vector<uint32_t>& get_info_bits_pos() const;
+    const std::vector<uint32_t>& get_info_bits_pos() const;
 
-	bool is_sys() const;
+    bool is_sys() const;
 
-protected:
-	void _encode(const B *U_K, B *X_N, const size_t frame_id);
+  protected:
+    void _encode(const B* U_K, B* X_N, const size_t frame_id);
 };
 }
 }

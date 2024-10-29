@@ -9,9 +9,6 @@
 #ifndef AFF3CT_HPP
 #define AFF3CT_HPP
 
-#ifndef AFF3CT_CORE_HPP
-#include <aff3ct-core.hpp>
-#endif
 #ifndef FACTORY_HPP
 #include <Factory/Factory.hpp>
 #endif
@@ -536,6 +533,12 @@
 #endif
 #ifndef DECODER_RSC_DB_BCJR_HPP_
 #include <Module/Decoder/RSC_DB/BCJR/Decoder_RSC_DB_BCJR.hpp>
+#endif
+#ifndef DECODER_VITERBI_SIHO_HPP_
+#include <Module/Decoder/RSC/Viterbi/Decoder_Viterbi_SIHO.hpp>
+#endif
+#ifndef DECODER_VITERBI_LIST_PARALLEL_HPP_
+#include <Module/Decoder/RSC/Viterbi_list/Decoder_Viterbi_list_parallel.hpp>
 #endif
 #ifndef DECODER_RS
 #include <Module/Decoder/RS/Decoder_RS.hpp>

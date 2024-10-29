@@ -13,20 +13,19 @@ namespace tools
 {
 class Frozenbits_generator_5G : public Frozenbits_generator_file
 {
-private:
-	const int m;
-	const int N_max = 1024;
+  private:
+    const int m;
+    const int N_max = 1024;
 
-public:
-	Frozenbits_generator_5G(const int K, const int N);
+  public:
+    Frozenbits_generator_5G(const int K, const int N);
 
-	~Frozenbits_generator_5G();
+    ~Frozenbits_generator_5G();
 
-	virtual Frozenbits_generator_5G* clone() const;
+    virtual Frozenbits_generator_5G* clone() const;
 
-private:
-	void evaluate();
-
+  private:
+    void evaluate();
 };
 }
 }

@@ -11,8 +11,8 @@ namespace tools
 {
 class Interface_notify_noise_update
 {
-public:
-	virtual void notify_noise_update() = 0;
+  public:
+    virtual void notify_noise_update() = 0;
 };
 
 }

@@ -7,7 +7,8 @@ namespace aff3ct
 {
 namespace tools
 {
-void fb_assert(const std::vector<bool>& frozen_bits, const int K, const int N);
+void
+fb_assert(const std::vector<bool>& frozen_bits, const int K, const int N);
 }
 }
 

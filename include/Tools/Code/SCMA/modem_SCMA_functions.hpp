@@ -12,22 +12,26 @@ namespace aff3ct
 namespace tools
 {
 // -------------------------------------------------------------------------- special function prototypes for templates
-template <typename R>
+template<typename R>
 using proto_psi = R (*)(const std::complex<R>& d, const R& n0);
 
 // ------------------------------------------------------------------------------------------- special function headers
 
-template <typename R>
-inline R psi_0(const std::complex<R>& d, const R& n0);
+template<typename R>
+inline R
+psi_0(const std::complex<R>& d, const R& n0);
 
-template <typename R>
-inline R psi_1(const std::complex<R>& d, const R& n0);
+template<typename R>
+inline R
+psi_1(const std::complex<R>& d, const R& n0);
 
-template <typename R>
-inline R psi_2(const std::complex<R>& d, const R& n0);
+template<typename R>
+inline R
+psi_2(const std::complex<R>& d, const R& n0);
 
-template <typename R>
-inline R psi_3(const std::complex<R>& d, const R& n0);
+template<typename R>
+inline R
+psi_3(const std::complex<R>& d, const R& n0);
 
 }
 }

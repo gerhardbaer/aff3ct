@@ -11,17 +11,17 @@ namespace aff3ct
 {
 namespace module
 {
-template <typename B = int, typename R = float, typename Q = R>
-class Modem_OOK_BEC : public Modem_OOK<B,R,Q>
+template<typename B = int, typename R = float, typename Q = R>
+class Modem_OOK_BEC : public Modem_OOK<B, R, Q>
 {
-public:
-	Modem_OOK_BEC(const int N);
-	virtual ~Modem_OOK_BEC() = default;
+  public:
+    Modem_OOK_BEC(const int N);
+    virtual ~Modem_OOK_BEC() = default;
 
-	virtual Modem_OOK_BEC<B,R,Q>* clone() const;
+    virtual Modem_OOK_BEC<B, R, Q>* clone() const;
 
-protected:
-	void _demodulate(const float *CP, const Q *Y_N1, Q *Y_N2, const size_t frame_id);
+  protected:
+    void _demodulate(const float* CP, const Q* Y_N1, Q* Y_N2, const size_t frame_id);
 };
 }
 }

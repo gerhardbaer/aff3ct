@@ -9,7 +9,9 @@ namespace aff3ct
 {
 namespace tools
 {
-class API_polar {};
+class API_polar
+{
+};
 }
 }
 

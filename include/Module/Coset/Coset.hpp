@@ -5,28 +5,35 @@
 #ifndef COSET_HPP_
 #define COSET_HPP_
 
-#include <cstdint>
 #include <cstddef>
-#include <vector>
+#include <cstdint>
 #include <memory>
-
-#include "Runtime/Task/Task.hpp"
-#include "Runtime/Socket/Socket.hpp"
-#include "Module/Module.hpp"
+#include <streampu.hpp>
+#include <vector>
 
 namespace aff3ct
 {
 namespace module
 {
-	namespace cst
-	{
-		enum class tsk : size_t { apply, SIZE };
+namespace cst
+{
+enum class tsk : size_t
+{
+    apply,
+    SIZE
+};
 
-		namespace sck
-		{
-			enum class apply : size_t { ref, in, out, status };
-		}
-	}
+namespace sck
+{
+enum class apply : size_t
+{
+    ref,
+    in,
+    out,
+    status
+};
+}
+}
 
 /*!
  * \class Coset
@@ -38,50 +45,53 @@ namespace module
  *
  * Please use Coset for inheritance (instead of Coset).
  */
-template <typename B, typename D>
-class Coset : public Module
+template<typename B, typename D>
+class Coset : public spu::module::Stateful
 {
-public:
-	inline runtime::Task&   operator[](const cst::tsk        t);
-	inline runtime::Socket& operator[](const cst::sck::apply s);
+  public:
+    inline spu::runtime::Task& operator[](const cst::tsk t);
+    inline spu::runtime::Socket& operator[](const cst::sck::apply s);
 
-protected:
-	const int size; /*!< Size of the input data */
+  protected:
+    const int size; /*!< Size of the input data */
 
-public:
-	/*!
-	 * \brief Constructor.
-	 *
-	 * \param size: size of the input data.
-	 */
-	Coset(const int size);
+  public:
+    /*!
+     * \brief Constructor.
+     *
+     * \param size: size of the input data.
+     */
+    Coset(const int size);
 
-	/*!
-	 * \brief Destructor.
-	 */
-	virtual ~Coset() = default;
+    /*!
+     * \brief Destructor.
+     */
+    virtual ~Coset() = default;
 
-	virtual Coset<B,D>* clone() const;
+    virtual Coset<B, D>* clone() const;
 
-	int get_size() const;
+    int get_size() const;
 
-	/*!
-	 * \brief Applies the coset approach on data using the reference.
-	 *
-	 * Flips the bits or the signs depending on the reference (flips if bit ref = 1, do nothing else).
-	 *
-	 * \param ref: the ref codeword.
-	 * \param in:  the input data to apply the coset on.
-	 * \param out: the output data after the coset application.
-	 */
-	template <class AB = std::allocator<B>, class AD = std::allocator<D>>
-	void apply(const std::vector<B,AB>& ref, const std::vector<D,AD> &in, std::vector<D,AD> &out,
-	           const int frame_id = -1, const bool managed_memory = true);
+    /*!
+     * \brief Applies the coset approach on data using the reference.
+     *
+     * Flips the bits or the signs depending on the reference (flips if bit ref = 1, do nothing else).
+     *
+     * \param ref: the ref codeword.
+     * \param in:  the input data to apply the coset on.
+     * \param out: the output data after the coset application.
+     */
+    template<class AB = std::allocator<B>, class AD = std::allocator<D>>
+    void apply(const std::vector<B, AB>& ref,
+               const std::vector<D, AD>& in,
+               std::vector<D, AD>& out,
+               const int frame_id = -1,
+               const bool managed_memory = true);
 
-	void apply(const B *ref, const D *in, D *out, const int frame_id = -1, const bool managed_memory = true);
+    void apply(const B* ref, const D* in, D* out, const int frame_id = -1, const bool managed_memory = true);
 
-protected:
-	virtual void _apply(const B *ref, const D *in, D *out, const size_t frame_id);
+  protected:
+    virtual void _apply(const B* ref, const D* in, D* out, const size_t frame_id);
 };
 }
 }

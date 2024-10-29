@@ -15,26 +15,26 @@ namespace tools
  * \class Scaling_factor
  * \brief Re-scales the extrinsic information (used in the turbo decoding process).
  */
-template <typename B = int, typename R = float>
-class Scaling_factor : public Post_processing_SISO<B,R>
+template<typename B = int, typename R = float>
+class Scaling_factor : public Post_processing_SISO<B, R>
 {
-protected:
-	const int n_ite; /*!< Number of iterations in the turbo decoding process */
+  protected:
+    const int n_ite; /*!< Number of iterations in the turbo decoding process */
 
-public:
-	/*!
-	 * \brief Constructor.
-	 *
-	 * \param n_ite: number of iterations in the turbo decoding process.
-	 */
-	explicit Scaling_factor(const int n_ite);
+  public:
+    /*!
+     * \brief Constructor.
+     *
+     * \param n_ite: number of iterations in the turbo decoding process.
+     */
+    explicit Scaling_factor(const int n_ite);
 
-	/*!
-	 * \brief Destructor.
-	 */
-	virtual ~Scaling_factor() = default;
+    /*!
+     * \brief Destructor.
+     */
+    virtual ~Scaling_factor() = default;
 
-	virtual Scaling_factor<B,R>* clone() const;
+    virtual Scaling_factor<B, R>* clone() const;
 };
 }
 }

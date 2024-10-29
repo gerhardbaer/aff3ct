@@ -13,9 +13,9 @@ namespace tools
 {
 class Interface_get_set_noise
 {
-public:
-	virtual const tools::Noise<>& get_noise() const = 0;
-	virtual void set_noise(const tools::Noise<>& noise) = 0;
+  public:
+    virtual const tools::Noise<>& get_noise() const = 0;
+    virtual void set_noise(const tools::Noise<>& noise) = 0;
 };
 
 }

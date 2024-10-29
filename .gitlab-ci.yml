@@ -30,6 +30,26 @@ analysis-cppcheck:
   script:
     - ./ci/analysis-cppcheck.sh
 
+analysis-clang-format:
+  image: ubuntu:23.04
+  stage: analysis
+  tags:
+    - x86_64
+    - linux
+    - docker
+  script:
+    - apt-get update
+    - apt-get -y install clang-format
+    - clang-format --version
+    - mkdir original_code
+    - cp -r include original_code
+    - cp -r src original_code
+    - ./scripts/apply_clang_format.sh
+    - mkdir new_code
+    - cp -r include new_code
+    - cp -r src new_code
+    - diff -r new_code original_code
+
 analysis-clang:
   image: registry.gitlab.com/aff3ct/aff3ct/x86_64_ubuntu_clang:v10.0.0
   stage: analysis
@@ -44,7 +64,7 @@ analysis-clang:
       - clang_reports/
   only:
     - master
-    - development
+    - develop
   tags:
     - x86_64
     - linux
@@ -86,7 +106,7 @@ analysis-git-submodules:
     - docker
   only:
     - master
-    - development
+    - develop
   script:
     - source ./ci/tools/git-branch.sh
     - ./ci/analysis-git-submodule.sh
@@ -368,7 +388,7 @@ build-windows-gcc-x86-sse4.2:
   script:
     - $env:CFLAGS="-Wall -funroll-loops -m64 -msse4.2"
     - $env:LFLAGS="-static -static-libgcc -static-libstdc++"
-    - $env:CMAKE_OPT="-DAFF3CT_COMPILE_EXE=ON -DAFF3CT_COMPILE_STATIC_LIB=ON -DAFF3CT_COMPILE_SHARED_LIB=ON -DAFF3CT_PREC=MULTI -DAFF3CT_EXT_STRINGS=OFF"
+    - $env:CMAKE_OPT="-DAFF3CT_COMPILE_EXE=ON -DAFF3CT_COMPILE_STATIC_LIB=ON -DAFF3CT_COMPILE_SHARED_LIB=ON -DAFF3CT_PREC=MULTI -DAFF3CT_EXT_STRINGS=OFF -DSPU_STACKTRACE=OFF"
     - $env:NAME="build_windows_gcc_x86_sse4.2"
     - ./ci/build-windows-gcc.bat
 
@@ -396,7 +416,7 @@ build-windows-gcc-x64-avx2:
   script:
     - $env:CFLAGS="-Wall -funroll-loops -m64 -mavx2"
     - $env:LFLAGS="-static -static-libgcc -static-libstdc++"
-    - $env:CMAKE_OPT="-DAFF3CT_COMPILE_EXE=ON -DAFF3CT_COMPILE_STATIC_LIB=ON -DAFF3CT_COMPILE_SHARED_LIB=ON -DAFF3CT_PREC=MULTI -DAFF3CT_EXT_STRINGS=OFF"
+    - $env:CMAKE_OPT="-DAFF3CT_COMPILE_EXE=ON -DAFF3CT_COMPILE_STATIC_LIB=ON -DAFF3CT_COMPILE_SHARED_LIB=ON -DAFF3CT_PREC=MULTI -DAFF3CT_EXT_STRINGS=OFF -DSPU_STACKTRACE=OFF"
     - $env:NAME="build_windows_gcc_x64_avx2"
     - ./ci/build-windows-gcc.bat
 
@@ -421,7 +441,7 @@ build-windows-msvc-avx:
       - build_windows_msvc_avx
   script:
     - $env:CFLAGS="-D_CRT_SECURE_NO_DEPRECATE /MT /EHsc /arch:AVX"
-    - $env:CMAKE_OPT="-DAFF3CT_COMPILE_EXE=ON -DAFF3CT_COMPILE_STATIC_LIB=ON -DAFF3CT_COMPILE_SHARED_LIB=ON -DAFF3CT_PREC=MULTI"
+    - $env:CMAKE_OPT="-DAFF3CT_COMPILE_EXE=ON -DAFF3CT_COMPILE_STATIC_LIB=ON -DAFF3CT_COMPILE_SHARED_LIB=ON -DAFF3CT_PREC=MULTI -DSPU_STACKTRACE=OFF"
     - $env:NAME="build_windows_msvc_avx"
     - ./ci/build-windows-msvc.bat
 
@@ -908,7 +928,7 @@ deploy-sonarqube-linux:
     - no_proxy
   only:
     - master
-    - development
+    - develop
   allow_failure: true
   script:
     - export REPORTS_DIR="clang_reports"
@@ -934,7 +954,7 @@ deploy-builds-linux:
     - no_proxy
   only:
     - master
-    - development
+    - develop
   artifacts:
      name: builds
      when: always
@@ -978,7 +998,7 @@ deploy-upload-ppa:
     - no_proxy
   only:
     - master
-    - development
+    - develop
     - ppa_upload
   artifacts:
     name: ppa_files
@@ -1017,4 +1037,4 @@ pages:
       - public
     expire_in: 30 days
   only:
-    - development
+    - develop

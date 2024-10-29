@@ -12,23 +12,23 @@ namespace aff3ct
 {
 namespace tools
 {
-template <typename B = int32_t, typename R = float>
-class Reporter_MI : public Reporter_monitor<module::Monitor_MI<B,R>>
+template<typename B = int32_t, typename R = float>
+class Reporter_MI : public Reporter_monitor<module::Monitor_MI<B, R>>
 {
-public:
-	using Rm = Reporter_monitor<module::Monitor_MI<B,R>>;
-	using typename Rm::M;
-	using typename Rm::report_t;
+  public:
+    using Rm = Reporter_monitor<module::Monitor_MI<B, R>>;
+    using typename Rm::M;
+    using typename Rm::report_t;
 
-public:
-	explicit Reporter_MI(const M &monitor);
+  public:
+    explicit Reporter_MI(const M& monitor);
 
-	virtual ~Reporter_MI() = default;
+    virtual ~Reporter_MI() = default;
 
-	report_t report(bool final = false);
+    report_t report(bool final = false);
 
-private:
-	void create_groups();
+  private:
+    void create_groups();
 };
 }
 }

@@ -13,26 +13,26 @@ namespace aff3ct
 {
 namespace tools
 {
-template <typename B = int32_t, typename R = float>
-class Reporter_EXIT : public Reporter_monitor<module::Monitor_EXIT<B,R>>
+template<typename B = int32_t, typename R = float>
+class Reporter_EXIT : public Reporter_monitor<module::Monitor_EXIT<B, R>>
 {
-public:
-	using Rm = Reporter_monitor<module::Monitor_EXIT<B,R>>;
-	using typename Rm::M;
-	using typename Rm::report_t;
+  public:
+    using Rm = Reporter_monitor<module::Monitor_EXIT<B, R>>;
+    using typename Rm::M;
+    using typename Rm::report_t;
 
-protected:
-	const Noise<>& noise_a;
+  protected:
+    const Noise<>& noise_a;
 
-public:
-	Reporter_EXIT(const M &monitor, const Noise<>& noise_a);
+  public:
+    Reporter_EXIT(const M& monitor, const Noise<>& noise_a);
 
-	virtual ~Reporter_EXIT() = default;
+    virtual ~Reporter_EXIT() = default;
 
-	report_t report(bool final = false);
+    report_t report(bool final = false);
 
-private:
-	void create_groups();
+  private:
+    void create_groups();
 };
 }
 }

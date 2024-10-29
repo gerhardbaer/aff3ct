@@ -17,33 +17,32 @@ namespace tools
 // ====================================================================================================================
 // ====================================================================================================================
 
-template <typename B, typename R, proto_h_i<B,R> HI, int N_ELMTS = 0>
+template<typename B, typename R, proto_h_i<B, R> HI, int N_ELMTS = 0>
 struct rep_inter
 {
-	static void apply(const R *__restrict l_a, B *__restrict s_a, const int n_elmts = 0);
+    static void apply(const R* __restrict l_a, B* __restrict s_a, const int n_elmts = 0);
 };
 
-
-template <typename B, typename R, proto_h_i<B,R> HI>
-struct rep_inter <B, R, HI, 0>
+template<typename B, typename R, proto_h_i<B, R> HI>
+struct rep_inter<B, R, HI, 0>
 {
-	static void apply(const R *__restrict l_a, B *__restrict s_a, const int n_elmts = 0);
+    static void apply(const R* __restrict l_a, B* __restrict s_a, const int n_elmts = 0);
 };
 
 // ============================================================================================================== spc()
 // ====================================================================================================================
 // ====================================================================================================================
 
-template <typename B, typename R, proto_h_i<B,R> HI, int N_ELMTS = 0>
+template<typename B, typename R, proto_h_i<B, R> HI, int N_ELMTS = 0>
 struct spc_inter
 {
-	static void apply(const R *__restrict l_a, B *__restrict s_a, const int n_elmts = 0);
+    static void apply(const R* __restrict l_a, B* __restrict s_a, const int n_elmts = 0);
 };
 
-template <typename B, typename R, proto_h_i<B,R> HI>
-struct spc_inter <B, R, HI, 0>
+template<typename B, typename R, proto_h_i<B, R> HI>
+struct spc_inter<B, R, HI, 0>
 {
-	static void apply(const R *__restrict l_a, B *__restrict s_a, const int n_elmts = 0);
+    static void apply(const R* __restrict l_a, B* __restrict s_a, const int n_elmts = 0);
 };
 }
 }

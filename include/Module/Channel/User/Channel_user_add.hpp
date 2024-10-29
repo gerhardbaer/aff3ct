@@ -5,9 +5,9 @@
 #ifndef CHANNEL_USER_ADD_HPP_
 #define CHANNEL_USER_ADD_HPP_
 
-#include <string>
 #include "Module/Channel/Channel.hpp"
 #include "Module/Channel/User/Channel_user.hpp"
+#include <string>
 
 namespace aff3ct
 {
@@ -21,16 +21,16 @@ namespace module
  *
  * \tparam R: type of the reals (floating-point representation) in the Channel.
  */
-template <typename R = float>
+template<typename R = float>
 class Channel_user_add : public Channel_user<R>
 {
-public:
-	Channel_user_add(const int N, const std::string &filename, const bool add_users = false);
-	virtual ~Channel_user_add() = default;
-	virtual Channel_user_add<R>* clone() const;
+  public:
+    Channel_user_add(const int N, const std::string& filename, const bool add_users = false);
+    virtual ~Channel_user_add() = default;
+    virtual Channel_user_add<R>* clone() const;
 
-protected:
-	virtual void _add_noise(const float *CP, const R *X_N, R *Y_N, const size_t frame_id);
+  protected:
+    virtual void _add_noise(const float* CP, const R* X_N, R* Y_N, const size_t frame_id);
 };
 }
 }

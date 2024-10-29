@@ -13,22 +13,22 @@ namespace aff3ct
 {
 namespace tools
 {
-template <typename T = uint32_t>
+template<typename T = uint32_t>
 class Interleaver_core_CCSDS : public Interleaver_core<T>
 {
-public:
-	Interleaver_core_CCSDS(const int size);
-	virtual ~Interleaver_core_CCSDS() = default;
+  public:
+    Interleaver_core_CCSDS(const int size);
+    virtual ~Interleaver_core_CCSDS() = default;
 
-	virtual Interleaver_core_CCSDS<T>* clone() const;
+    virtual Interleaver_core_CCSDS<T>* clone() const;
 
-protected:
-	void gen_lut(T *lut, const size_t frame_id);
+  protected:
+    void gen_lut(T* lut, const size_t frame_id);
 
-private:
-	static inline int pi_CCSDS(const int &index, const int &k_1, const int &k_2);
+  private:
+    static inline int pi_CCSDS(const int& index, const int& k_1, const int& k_2);
 };
 }
 }
 
-#endif	/* INTERLEAVER_CORE_CCSDS_HPP */
+#endif /* INTERLEAVER_CORE_CCSDS_HPP */

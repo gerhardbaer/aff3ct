@@ -7,26 +7,28 @@
 
 #include <vector>
 
-#include "Tools/Code/Polar/Polar_code.hpp"
 #include "Module/Encoder/Polar_MK/Encoder_polar_MK.hpp"
+#include "Tools/Code/Polar/Polar_code.hpp"
 
 namespace aff3ct
 {
 namespace module
 {
-template <typename B = int>
+template<typename B = int>
 class Encoder_polar_MK_sys : public Encoder_polar_MK<B>
 {
-public:
-	Encoder_polar_MK_sys(const int& K, const int& N, const tools::Polar_code& code,
-	                     const std::vector<bool>& frozen_bits);
+  public:
+    Encoder_polar_MK_sys(const int& K,
+                         const int& N,
+                         const tools::Polar_code& code,
+                         const std::vector<bool>& frozen_bits);
 
-	virtual ~Encoder_polar_MK_sys() = default;
+    virtual ~Encoder_polar_MK_sys() = default;
 
-	virtual Encoder_polar_MK_sys<B>* clone() const;
+    virtual Encoder_polar_MK_sys<B>* clone() const;
 
-protected:
-	virtual void _encode(const B *U_K, B *X_N, const size_t frame_id);
+  protected:
+    virtual void _encode(const B* U_K, B* X_N, const size_t frame_id);
 };
 }
 }

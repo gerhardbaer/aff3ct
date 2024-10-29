@@ -14,20 +14,20 @@ namespace aff3ct
 {
 namespace module
 {
-template <typename B = int, typename Q = float>
-class Extractor_uncoded : public Extractor<B,Q>
+template<typename B = int, typename Q = float>
+class Extractor_uncoded : public Extractor<B, Q>
 {
-protected:
-	std::vector<uint32_t> info_bits_pos;
+  protected:
+    std::vector<uint32_t> info_bits_pos;
 
-public:
-	Extractor_uncoded(const int K);
-	virtual ~Extractor_uncoded() = default;
+  public:
+    Extractor_uncoded(const int K);
+    virtual ~Extractor_uncoded() = default;
 
-	virtual Extractor_uncoded<B,Q>* clone() const;
+    virtual Extractor_uncoded<B, Q>* clone() const;
 
-protected:
-	const std::vector<uint32_t>& get_info_bits_pos();
+  protected:
+    const std::vector<uint32_t>& get_info_bits_pos();
 };
 }
 }

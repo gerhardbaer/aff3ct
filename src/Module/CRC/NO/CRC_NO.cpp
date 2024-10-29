@@ -5,57 +5,58 @@
 
 using namespace aff3ct::module;
 
-template <typename B>
-CRC_NO<B>
-::CRC_NO(const int K)
-: CRC<B>(K, 0)
+template<typename B>
+CRC_NO<B>::CRC_NO(const int K)
+  : CRC<B>(K, 0)
 {
-	const std::string name = "CRC_NO";
-	this->set_name(name);
+    const std::string name = "CRC_NO";
+    this->set_name(name);
+    for (auto& t : this->tasks)
+        t->set_replicability(true);
 }
 
-template <typename B>
-CRC_NO<B>* CRC_NO<B>
-::clone() const
+template<typename B>
+CRC_NO<B>*
+CRC_NO<B>::clone() const
 {
-	auto m = new CRC_NO(*this);
-	m->deep_copy(*this);
-	return m;
+    auto m = new CRC_NO(*this);
+    m->deep_copy(*this);
+    return m;
 }
 
-template <typename B>
-int CRC_NO<B>
-::get_size()
+template<typename B>
+int
+CRC_NO<B>::get_size()
 {
-	return 0;
+    return 0;
 }
 
-template <typename B>
-void CRC_NO<B>
-::_build(const B *U_K1, B *U_K2, const size_t frame_id)
+template<typename B>
+void
+CRC_NO<B>::_build(const B* U_K1, B* U_K2, const size_t frame_id)
 {
-	std::copy(U_K1, U_K1 + this->K, U_K2);
+    std::copy(U_K1, U_K1 + this->K, U_K2);
 }
 
-template <typename B>
-void CRC_NO<B>
-::_extract(const B *V_K1, B *V_K2, const size_t frame_id)
+template<typename B>
+void
+CRC_NO<B>::_extract(const B* V_K1, B* V_K2, const size_t frame_id)
 {
-	std::copy(V_K1, V_K1 + this->K, V_K2);
+    std::copy(V_K1, V_K1 + this->K, V_K2);
 }
 
-template <typename B>
-bool CRC_NO<B>
-::_check(const B *V_K, const size_t frame_id)
+template<typename B>
+bool
+CRC_NO<B>::_check(const B* V_K, const size_t frame_id)
 {
-	return false;
+    return false;
 }
 
-template <typename B>
-bool CRC_NO<B>
-::_check_packed(const B *V_K, const size_t frame_id)
+template<typename B>
+bool
+CRC_NO<B>::_check_packed(const B* V_K, const size_t frame_id)
 {
-	return false;
+    return false;
 }
 
 // ==================================================================================== explicit template instantiation

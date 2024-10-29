@@ -15,28 +15,26 @@ namespace aff3ct
 {
 namespace tools
 {
-template <typename B = int, typename R = float>
-class CRC_checker : public Post_processing_SISO<B,R>
+template<typename B = int, typename R = float>
+class CRC_checker : public Post_processing_SISO<B, R>
 {
-protected:
-	const int                       start_crc_check_ite;
-	std::shared_ptr<module::CRC<B>> crc;
+  protected:
+    const int start_crc_check_ite;
+    std::shared_ptr<module::CRC<B>> crc;
 
-public:
-	CRC_checker(const module::CRC<B> &crc, const int start_crc_check_ite = 2);
+  public:
+    CRC_checker(const module::CRC<B>& crc, const int start_crc_check_ite = 2);
 
-	virtual ~CRC_checker() = default;
+    virtual ~CRC_checker() = default;
 
-	virtual CRC_checker<B,R>* clone() const;
+    virtual CRC_checker<B, R>* clone() const;
 
-	virtual bool siso_n(const int ite,
-	                    const mipp::vector<R>& sys,
-	                          mipp::vector<R>& ext,
-	                          mipp::vector<B>& s);
+    virtual bool siso_n(const int ite, const mipp::vector<R>& sys, mipp::vector<R>& ext, mipp::vector<B>& s);
 
-	virtual void set_n_frames(const size_t n_frames);
-protected:
-	void deep_copy(const CRC_checker<B,R>& t);
+    virtual void set_n_frames(const size_t n_frames);
+
+  protected:
+    void deep_copy(const CRC_checker<B, R>& t);
 };
 }
 }

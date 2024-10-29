@@ -16,29 +16,29 @@ namespace tools
 {
 class Pattern_polar_std : public Pattern_polar_i
 {
-protected:
-	inline Pattern_polar_std(const int &N, const Binary_node<Pattern_polar_i>* node);
+  protected:
+    inline Pattern_polar_std(const int& N, const Binary_node<Pattern_polar_i>* node);
 
-public:
-	inline Pattern_polar_std();
+  public:
+    inline Pattern_polar_std();
 
-	virtual inline Pattern_polar_std* alloc(const int &N, const Binary_node<Pattern_polar_i>* node) const;
+    virtual inline Pattern_polar_std* alloc(const int& N, const Binary_node<Pattern_polar_i>* node) const;
 
-	virtual ~Pattern_polar_std() = default;
+    virtual ~Pattern_polar_std() = default;
 
-	virtual inline polar_node_t type()       const;
-	virtual inline std::string  name()       const;
-	virtual inline std::string  short_name() const;
-	virtual inline std::string  fill_color() const;
-	virtual inline std::string  font_color() const;
+    virtual inline polar_node_t type() const;
+    virtual inline std::string name() const;
+    virtual inline std::string short_name() const;
+    virtual inline std::string fill_color() const;
+    virtual inline std::string font_color() const;
 
-	virtual inline std::string f() const;
-	virtual inline std::string g() const;
-	virtual inline std::string h() const;
+    virtual inline std::string f() const;
+    virtual inline std::string g() const;
+    virtual inline std::string h() const;
 
-	virtual inline int _match(const int &reverse_graph_depth, const Binary_node<Pattern_polar_i>* node_curr) const;
+    virtual inline int _match(const int& reverse_graph_depth, const Binary_node<Pattern_polar_i>* node_curr) const;
 
-	virtual inline bool is_terminal() const;
+    virtual inline bool is_terminal() const;
 };
 }
 }

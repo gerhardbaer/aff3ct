@@ -13,27 +13,29 @@ namespace module
 {
 class Decoder_LDPC_BP
 {
-protected:
-	const int                  n_ite;
-	const tools::Sparse_matrix H;
-	const bool                 enable_syndrome;
-	const int                  syndrome_depth;
+  protected:
+    const int n_ite;
+    const tools::Sparse_matrix H;
+    const bool enable_syndrome;
+    const int syndrome_depth;
 
-	int cur_syndrome_depth;
+    int cur_syndrome_depth;
 
-public:
-	Decoder_LDPC_BP(const int K, const int N, const int n_ite,
-	                const tools::Sparse_matrix &H,
-	                const bool enable_syndrome = true,
-	                const int syndrome_depth = 1);
+  public:
+    Decoder_LDPC_BP(const int K,
+                    const int N,
+                    const int n_ite,
+                    const tools::Sparse_matrix& H,
+                    const bool enable_syndrome = true,
+                    const int syndrome_depth = 1);
 
-	virtual ~Decoder_LDPC_BP() = default;
+    virtual ~Decoder_LDPC_BP() = default;
 
-	template <typename R>
-	inline bool check_syndrome_soft(const R* Y_N);
+    template<typename R>
+    inline bool check_syndrome_soft(const R* Y_N);
 
-	template <typename B>
-	inline bool check_syndrome_hard(const B* V_N);
+    template<typename B>
+    inline bool check_syndrome_hard(const B* V_N);
 };
 }
 }

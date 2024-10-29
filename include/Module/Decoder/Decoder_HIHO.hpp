@@ -5,12 +5,10 @@
 #ifndef DECODER_HIHO_HPP_
 #define DECODER_HIHO_HPP_
 
+#include <cstdint>
 #include <memory>
 #include <vector>
-#include <cstdint>
 
-#include "Runtime/Task/Task.hpp"
-#include "Runtime/Socket/Socket.hpp"
 #include "Module/Decoder/Decoder.hpp"
 
 namespace aff3ct
@@ -26,66 +24,76 @@ namespace module
  *
  * The Decoder takes a soft input (real numbers) and return a hard output (bits).
  */
-template <typename B = int>
+template<typename B = int>
 class Decoder_HIHO : public Decoder
 {
-public:
-	inline runtime::Task&   operator[](const dec::tsk                 t);
-	inline runtime::Socket& operator[](const dec::sck::decode_hiho    s);
-	inline runtime::Socket& operator[](const dec::sck::decode_hiho_cw s);
+  public:
+    inline spu::runtime::Task& operator[](const dec::tsk t);
+    inline spu::runtime::Socket& operator[](const dec::sck::decode_hiho s);
+    inline spu::runtime::Socket& operator[](const dec::sck::decode_hiho_cw s);
 
-public:
-	/*!
-	 * \brief Constructor.
-	 *
-	 * \param K: number of information bits in the frame.
-	 * \param N: size of one frame.
-	 */
-	Decoder_HIHO(const int K, const int N);
+  public:
+    /*!
+     * \brief Constructor.
+     *
+     * \param K: number of information bits in the frame.
+     * \param N: size of one frame.
+     */
+    Decoder_HIHO(const int K, const int N);
 
-	/*!
-	 * \brief Destructor.
-	 */
-	virtual ~Decoder_HIHO() = default;
+    /*!
+     * \brief Destructor.
+     */
+    virtual ~Decoder_HIHO() = default;
 
-	virtual Decoder_HIHO<B>* clone() const;
+    virtual Decoder_HIHO<B>* clone() const;
 
-	/*!
-	 * \brief Task method that decodes the noisy frame.
-	 *
-	 * \param Y_N: a noisy frame.
-	 * \param V_K: a decoded codeword (only the information bits).
-	 */
-	template <class A = std::allocator<B>>
-	int decode_hiho(const std::vector<B,A>& Y_N, std::vector<int8_t,A>& CWD, std::vector<B,A>& V_K,
-	                const int frame_id = -1, const bool managed_memory = true);
+    /*!
+     * \brief Task method that decodes the noisy frame.
+     *
+     * \param Y_N: a noisy frame.
+     * \param V_K: a decoded codeword (only the information bits).
+     */
+    template<class A = std::allocator<B>>
+    int decode_hiho(const std::vector<B, A>& Y_N,
+                    std::vector<int8_t, A>& CWD,
+                    std::vector<B, A>& V_K,
+                    const int frame_id = -1,
+                    const bool managed_memory = true);
 
-	template <class A = std::allocator<B>>
-	int decode_hiho(const std::vector<B,A>& Y_N, std::vector<B,A>& V_K,
-	                const int frame_id = -1, const bool managed_memory = true);
+    template<class A = std::allocator<B>>
+    int decode_hiho(const std::vector<B, A>& Y_N,
+                    std::vector<B, A>& V_K,
+                    const int frame_id = -1,
+                    const bool managed_memory = true);
 
-	int decode_hiho(const B *Y_N, int8_t *CWD, B *V_K, const int frame_id = -1, const bool managed_memory = true);
+    int decode_hiho(const B* Y_N, int8_t* CWD, B* V_K, const int frame_id = -1, const bool managed_memory = true);
 
-	int decode_hiho(const B *Y_N, B *V_K, const int frame_id = -1, const bool managed_memory = true);
+    int decode_hiho(const B* Y_N, B* V_K, const int frame_id = -1, const bool managed_memory = true);
 
-	template <class A = std::allocator<B>>
-	int decode_hiho_cw(const std::vector<B,A>& Y_N, std::vector<int8_t,A>& CWD, std::vector<B,A>& V_N,
-	                   const int frame_id = -1, const bool managed_memory = true);
+    template<class A = std::allocator<B>>
+    int decode_hiho_cw(const std::vector<B, A>& Y_N,
+                       std::vector<int8_t, A>& CWD,
+                       std::vector<B, A>& V_N,
+                       const int frame_id = -1,
+                       const bool managed_memory = true);
 
-	template <class A = std::allocator<B>>
-	int decode_hiho_cw(const std::vector<B,A>& Y_N, std::vector<B,A>& V_N,
-	                   const int frame_id = -1, const bool managed_memory = true);
+    template<class A = std::allocator<B>>
+    int decode_hiho_cw(const std::vector<B, A>& Y_N,
+                       std::vector<B, A>& V_N,
+                       const int frame_id = -1,
+                       const bool managed_memory = true);
 
-	int decode_hiho_cw(const B *Y_N, int8_t *CWD, B *V_N, const int frame_id = -1, const bool managed_memory = true);
+    int decode_hiho_cw(const B* Y_N, int8_t* CWD, B* V_N, const int frame_id = -1, const bool managed_memory = true);
 
-	int decode_hiho_cw(const B *Y_N, B *V_N, const int frame_id = -1, const bool managed_memory = true);
+    int decode_hiho_cw(const B* Y_N, B* V_N, const int frame_id = -1, const bool managed_memory = true);
 
-protected:
-	virtual int _decode_hiho(const B *Y_N, int8_t *CWD, B *V_K, const size_t frame_id);
-	virtual int _decode_hiho(const B *Y_N,              B *V_K, const size_t frame_id);
+  protected:
+    virtual int _decode_hiho(const B* Y_N, int8_t* CWD, B* V_K, const size_t frame_id);
+    virtual int _decode_hiho(const B* Y_N, B* V_K, const size_t frame_id);
 
-	virtual int _decode_hiho_cw(const B *Y_N, int8_t *CWD, B *V_N, const size_t frame_id);
-	virtual int _decode_hiho_cw(const B *Y_N,              B *V_N, const size_t frame_id);
+    virtual int _decode_hiho_cw(const B* Y_N, int8_t* CWD, B* V_N, const size_t frame_id);
+    virtual int _decode_hiho_cw(const B* Y_N, B* V_N, const size_t frame_id);
 };
 }
 }

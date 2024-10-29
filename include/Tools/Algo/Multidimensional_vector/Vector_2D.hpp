@@ -12,19 +12,19 @@ namespace aff3ct
 {
 namespace tools
 {
-template <typename T>
+template<typename T>
 class Vector_2D
 {
-private:
+  private:
     const size_t d1, d2;
     std::vector<T> data;
 
-public:
-    explicit Vector_2D(size_t d1=0, size_t d2=0, T const & t=T());
+  public:
+    explicit Vector_2D(size_t d1 = 0, size_t d2 = 0, T const& t = T());
 
-    T & operator()(size_t i, size_t j);
+    T& operator()(size_t i, size_t j);
 
-    T const & operator()(size_t i, size_t j) const;
+    T const& operator()(size_t i, size_t j) const;
 };
 }
 }

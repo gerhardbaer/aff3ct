@@ -9,19 +9,19 @@ namespace aff3ct
 {
 namespace launcher
 {
-template <class L, typename B = int, typename R = float, typename Q = R>
+template<class L, typename B = int, typename R = float, typename Q = R>
 class Polar_MK : public L
 {
-protected:
-	factory::Codec_polar_MK *params_cdc;
+  protected:
+    factory::Codec_polar_MK* params_cdc;
 
-public:
-	Polar_MK(const int argc, const char **argv, std::ostream &stream = std::cout);
-	virtual ~Polar_MK() = default;
+  public:
+    Polar_MK(const int argc, const char** argv, std::ostream& stream = std::cout);
+    virtual ~Polar_MK() = default;
 
-protected:
-	virtual void get_description_args();
-	virtual void store_args();
+  protected:
+    virtual void get_description_args();
+    virtual void store_args();
 };
 }
 }

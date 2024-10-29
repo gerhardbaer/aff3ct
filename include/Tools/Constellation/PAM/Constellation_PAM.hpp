@@ -13,20 +13,20 @@ namespace aff3ct
 {
 namespace tools
 {
-template <typename R = float>
+template<typename R = float>
 class Constellation_PAM : public Constellation<R>
 {
-public:
-	using typename Constellation<R>::S;
+  public:
+    using typename Constellation<R>::S;
 
-	/*
-	 * \param n_bps is the number of bits per symbol
-	 */
-	explicit Constellation_PAM(const unsigned n_bps);
+    /*
+     * \param n_bps is the number of bits per symbol
+     */
+    explicit Constellation_PAM(const unsigned n_bps);
 
-protected:
-	S bits_to_symbol(const uint8_t bits[]) const;
-	const R sqrt_es;
+  protected:
+    S bits_to_symbol(const uint8_t bits[]) const;
+    const R sqrt_es;
 };
 
 }

@@ -13,19 +13,19 @@ namespace aff3ct
 {
 namespace tools
 {
-template <typename T = uint32_t>
+template<typename T = uint32_t>
 class Interleaver_core_NO : public Interleaver_core<T>
 {
-public:
-	Interleaver_core_NO(const int size);
-	virtual ~Interleaver_core_NO() = default;
+  public:
+    Interleaver_core_NO(const int size);
+    virtual ~Interleaver_core_NO() = default;
 
-	virtual Interleaver_core_NO<T>* clone() const;
+    virtual Interleaver_core_NO<T>* clone() const;
 
-protected:
-	void gen_lut(T *lut, const size_t frame_id);
+  protected:
+    void gen_lut(T* lut, const size_t frame_id);
 };
 }
 }
 
-#endif	/* INTERLEAVER_CORE_NO_HPP */
+#endif /* INTERLEAVER_CORE_NO_HPP */

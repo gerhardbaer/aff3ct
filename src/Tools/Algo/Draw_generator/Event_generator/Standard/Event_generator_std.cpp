@@ -3,38 +3,36 @@
 using namespace aff3ct;
 using namespace aff3ct::tools;
 
-template <typename R, typename E>
-Event_generator_std<R,E>
-::Event_generator_std(const int seed)
-: Event_generator<R,E>()
+template<typename R, typename E>
+Event_generator_std<R, E>::Event_generator_std(const int seed)
+  : Event_generator<R, E>()
 {
-	this->set_seed(seed);
+    this->set_seed(seed);
 }
 
-template <typename R, typename E>
-Event_generator_std<R,E>* Event_generator_std<R,E>
-::clone() const
+template<typename R, typename E>
+Event_generator_std<R, E>*
+Event_generator_std<R, E>::clone() const
 {
-	return new Event_generator_std(*this);
+    return new Event_generator_std(*this);
 }
 
-template <typename R, typename E>
-void Event_generator_std<R,E>
-::set_seed(const int seed)
+template<typename R, typename E>
+void
+Event_generator_std<R, E>::set_seed(const int seed)
 {
-	rd_engine.seed(seed);
+    rd_engine.seed(seed);
 }
 
-template <typename R, typename E>
-void Event_generator_std<R,E>
-::generate(E *draw, const unsigned length, const R event_probability)
+template<typename R, typename E>
+void
+Event_generator_std<R, E>::generate(E* draw, const unsigned length, const R event_probability)
 {
-	std::bernoulli_distribution bern_dist(event_probability);
+    std::bernoulli_distribution bern_dist(event_probability);
 
-	for (unsigned i = 0; i < length; i++)
-		draw[i] = (E)bern_dist(this->rd_engine);
+    for (unsigned i = 0; i < length; i++)
+        draw[i] = (E)bern_dist(this->rd_engine);
 }
-
 
 // ==================================================================================== explicit template instantiation
 #include "Tools/types.h"

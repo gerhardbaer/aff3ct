@@ -15,18 +15,18 @@ namespace tools
 {
 struct LDPC_syndrome
 {
-public:
-	template <typename B>
-	static inline bool check_hard(const std::vector<B> &X_N, const Sparse_matrix &H);
+  public:
+    template<typename B>
+    static inline bool check_hard(const std::vector<B>& X_N, const Sparse_matrix& H);
 
-	template <typename B>
-	static inline bool check_hard(const B *X_N, const Sparse_matrix &H);
+    template<typename B>
+    static inline bool check_hard(const B* X_N, const Sparse_matrix& H);
 
-	template <typename R>
-	static inline bool check_soft(const std::vector<R> &Y_N, const Sparse_matrix &H);
+    template<typename R>
+    static inline bool check_soft(const std::vector<R>& Y_N, const Sparse_matrix& H);
 
-	template <typename R>
-	static inline bool check_soft(const R *Y_N, const Sparse_matrix &H);
+    template<typename R>
+    static inline bool check_soft(const R* Y_N, const Sparse_matrix& H);
 };
 }
 }
