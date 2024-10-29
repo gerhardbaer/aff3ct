@@ -5,29 +5,28 @@
 #ifndef REPORTER_MONITOR_HPP_
 #define REPORTER_MONITOR_HPP_
 
-#include <vector>
-#include <utility>
+#include <streampu.hpp>
 #include <string>
-
-#include "Tools/Reporter/Reporter.hpp"
+#include <utility>
+#include <vector>
 
 namespace aff3ct
 {
 namespace tools
 {
-template <class M_t>
-class Reporter_monitor : public Reporter
+template<class M_t>
+class Reporter_monitor : public spu::tools::Reporter
 {
-public:
-	using M = M_t;
+  public:
+    using M = M_t;
 
-protected:
-	const M& monitor;
-	group_t monitor_group;
+  protected:
+    const M& monitor;
+    group_t monitor_group;
 
-public:
-	explicit Reporter_monitor(const M &monitor);
-	virtual ~Reporter_monitor() = default;
+  public:
+    explicit Reporter_monitor(const M& monitor);
+    virtual ~Reporter_monitor() = default;
 };
 }
 }

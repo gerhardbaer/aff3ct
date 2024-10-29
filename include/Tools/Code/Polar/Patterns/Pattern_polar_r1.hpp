@@ -16,32 +16,34 @@ namespace tools
 {
 class Pattern_polar_r1 : public Pattern_polar_i
 {
-protected:
-	inline Pattern_polar_r1(const int &N, const Binary_node<Pattern_polar_i>* node,
-	                        const int min_level = 0, const int max_level = -1);
+  protected:
+    inline Pattern_polar_r1(const int& N,
+                            const Binary_node<Pattern_polar_i>* node,
+                            const int min_level = 0,
+                            const int max_level = -1);
 
-public:
-	inline Pattern_polar_r1(const int min_level = 0, const int max_level = -1);
+  public:
+    inline Pattern_polar_r1(const int min_level = 0, const int max_level = -1);
 
-	virtual inline Pattern_polar_r1* alloc(const int &N, const Binary_node<Pattern_polar_i>* node) const;
+    virtual inline Pattern_polar_r1* alloc(const int& N, const Binary_node<Pattern_polar_i>* node) const;
 
-	virtual ~Pattern_polar_r1() = default;
+    virtual ~Pattern_polar_r1() = default;
 
-	virtual inline polar_node_t type()       const;
-	virtual inline std::string  name()       const;
-	virtual inline std::string  short_name() const;
-	virtual inline std::string  fill_color() const;
-	virtual inline std::string  font_color() const;
+    virtual inline polar_node_t type() const;
+    virtual inline std::string name() const;
+    virtual inline std::string short_name() const;
+    virtual inline std::string fill_color() const;
+    virtual inline std::string font_color() const;
 
-	virtual inline std::string f() const;
-	virtual inline std::string g() const;
-	virtual inline std::string h() const;
+    virtual inline std::string f() const;
+    virtual inline std::string g() const;
+    virtual inline std::string h() const;
 
-	static inline bool recursive_check(const int reverse_graph_depth, const Binary_node<Pattern_polar_i>* node_curr);
+    static inline bool recursive_check(const int reverse_graph_depth, const Binary_node<Pattern_polar_i>* node_curr);
 
-	virtual inline int _match(const int &reverse_graph_depth, const Binary_node<Pattern_polar_i>* node_curr) const;
+    virtual inline int _match(const int& reverse_graph_depth, const Binary_node<Pattern_polar_i>* node_curr) const;
 
-	virtual inline bool is_terminal() const;
+    virtual inline bool is_terminal() const;
 };
 }
 }

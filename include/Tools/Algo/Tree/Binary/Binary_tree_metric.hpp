@@ -19,43 +19,43 @@ namespace tools
  * \tparam T: the type of the contents in each tree nodes.
  * \tparam R: the type of the tree metric.
  */
-template <typename T = float, typename R = int>
+template<typename T = float, typename R = int>
 class Binary_tree_metric : public Binary_tree<T>
 {
-protected:
-	R path_metric; /*!< Metric of the tree. */
+  protected:
+    R path_metric; /*!< Metric of the tree. */
 
-public:
-	/*!
-	 * \brief Constructor.
-	 *
-	 * Builds a tree and allocates the nodes.
-	 *
-	 * \param depth:       the binary tree depth.
-	 * \param path_metric: internal tree metric.
-	 */
-	Binary_tree_metric(int depth, R path_metric);
+  public:
+    /*!
+     * \brief Constructor.
+     *
+     * Builds a tree and allocates the nodes.
+     *
+     * \param depth:       the binary tree depth.
+     * \param path_metric: internal tree metric.
+     */
+    Binary_tree_metric(int depth, R path_metric);
 
-	/*!
-	 * \brief Destructor.
-	 *
-	 * Releases all the nodes in the tree.
-	 */
-	virtual ~Binary_tree_metric();
+    /*!
+     * \brief Destructor.
+     *
+     * Releases all the nodes in the tree.
+     */
+    virtual ~Binary_tree_metric();
 
-	/*!
-	 * \brief Returns the tree metric.
-	 *
-	 * \return the tree metric.
-	 */
-	R get_path_metric() const;
+    /*!
+     * \brief Returns the tree metric.
+     *
+     * \return the tree metric.
+     */
+    R get_path_metric() const;
 
-	/*!
-	 * \brief Sets the tree metric.
-	 *
-	 * \param path_metric: a tree metric.
-	 */
-	void set_path_metric(R path_metric);
+    /*!
+     * \brief Sets the tree metric.
+     *
+     * \param path_metric: a tree metric.
+     */
+    void set_path_metric(R path_metric);
 };
 }
 }
@@ -65,4 +65,3 @@ public:
 #endif
 
 #endif /* BINARY_TREE_METRIC_HPP_ */
-

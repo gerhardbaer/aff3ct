@@ -4,40 +4,40 @@ namespace aff3ct
 {
 namespace tools
 {
-size_t Matrix
-::get_n_rows() const
+size_t
+Matrix ::get_n_rows() const
 {
-	return this->n_rows;
+    return this->n_rows;
 }
 
-size_t Matrix
-::get_n_cols() const
+size_t
+Matrix ::get_n_cols() const
 {
-	return this->n_cols;
+    return this->n_cols;
 }
 
-size_t Matrix
-::size() const
+size_t
+Matrix ::size() const
 {
-	return this->n_rows * this->n_cols;
+    return this->n_rows * this->n_cols;
 }
 
-size_t Matrix
-::get_rows_max_degree() const
+size_t
+Matrix ::get_rows_max_degree() const
 {
-	return this->rows_max_degree;
+    return this->rows_max_degree;
 }
 
-size_t Matrix
-::get_cols_max_degree() const
+size_t
+Matrix ::get_cols_max_degree() const
 {
-	return this->cols_max_degree;
+    return this->cols_max_degree;
 }
 
-size_t Matrix
-::get_n_connections() const
+size_t
+Matrix ::get_n_connections() const
 {
-	return this->n_connections;
+    return this->n_connections;
 }
 }
 }

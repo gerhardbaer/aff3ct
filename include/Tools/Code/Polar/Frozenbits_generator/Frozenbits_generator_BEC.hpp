@@ -16,23 +16,25 @@ namespace tools
 {
 class Frozenbits_generator_BEC : public Frozenbits_generator
 {
-private:
-	const int m;
-	std::vector<double> z;
+  private:
+    const int m;
+    std::vector<double> z;
 
-public:
-	Frozenbits_generator_BEC(const int K, const int N, const std::string &dump_channels_path = "",
-	                                                   const bool dump_channels_single_thread = true);
+  public:
+    Frozenbits_generator_BEC(const int K,
+                             const int N,
+                             const std::string& dump_channels_path = "",
+                             const bool dump_channels_single_thread = true);
 
-	~Frozenbits_generator_BEC();
+    ~Frozenbits_generator_BEC();
 
-	virtual Frozenbits_generator_BEC* clone() const;
+    virtual Frozenbits_generator_BEC* clone() const;
 
-protected:
-	void   evaluate();
-	double phi    (double t);
-	double phi_inv(double t);
-	virtual void check_noise();
+  protected:
+    void evaluate();
+    double phi(double t);
+    double phi_inv(double t);
+    virtual void check_noise();
 };
 }
 }

@@ -13,17 +13,17 @@ namespace aff3ct
 {
 namespace module
 {
-template <typename B = int>
+template<typename B = int>
 class Encoder_polar_sys : public Encoder_polar<B>
 {
-public:
-	Encoder_polar_sys(const int& K, const int& N, const std::vector<bool>& frozen_bits);
-	virtual ~Encoder_polar_sys() = default;
+  public:
+    Encoder_polar_sys(const int& K, const int& N, const std::vector<bool>& frozen_bits);
+    virtual ~Encoder_polar_sys() = default;
 
-	virtual Encoder_polar_sys<B>* clone() const;
+    virtual Encoder_polar_sys<B>* clone() const;
 
-protected:
-	void _encode(const B *U_K, B *X_N, const size_t frame_id);
+  protected:
+    void _encode(const B* U_K, B* X_N, const size_t frame_id);
 };
 }
 }

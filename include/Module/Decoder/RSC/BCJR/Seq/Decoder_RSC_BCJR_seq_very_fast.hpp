@@ -7,31 +7,34 @@
 
 #include <vector>
 
-#include "Tools/Math/max.h"
 #include "Module/Decoder/RSC/BCJR/Seq/Decoder_RSC_BCJR_seq.hpp"
+#include "Tools/Math/max.h"
 
 namespace aff3ct
 {
 namespace module
 {
-template <typename B = int, typename R = float, typename RD = float,
-          tools::proto_max<R> MAX1 = tools::max, tools::proto_max<RD> MAX2 = tools::max>
-class Decoder_RSC_BCJR_seq_very_fast : public Decoder_RSC_BCJR_seq<B,R>
+template<typename B = int,
+         typename R = float,
+         typename RD = float,
+         tools::proto_max<R> MAX1 = tools::max,
+         tools::proto_max<RD> MAX2 = tools::max>
+class Decoder_RSC_BCJR_seq_very_fast : public Decoder_RSC_BCJR_seq<B, R>
 {
-public:
-	Decoder_RSC_BCJR_seq_very_fast(const int &K,
-	                               const std::vector<std::vector<int>> &trellis,
-	                               const bool buffered_encoding = true);
-	virtual ~Decoder_RSC_BCJR_seq_very_fast() = default;
+  public:
+    Decoder_RSC_BCJR_seq_very_fast(const int& K,
+                                   const std::vector<std::vector<int>>& trellis,
+                                   const bool buffered_encoding = true);
+    virtual ~Decoder_RSC_BCJR_seq_very_fast() = default;
 
-	virtual Decoder_RSC_BCJR_seq_very_fast<B,R,RD,MAX1,MAX2>* clone() const;
+    virtual Decoder_RSC_BCJR_seq_very_fast<B, R, RD, MAX1, MAX2>* clone() const;
 
-protected:
-	int _decode_siso_alt(const R *sys, const R *par, R *ext, const size_t frame_id);
+  protected:
+    int _decode_siso_alt(const R* sys, const R* par, R* ext, const size_t frame_id);
 
-	virtual void compute_gamma   (const R *sys, const R *par);
-	virtual void compute_alpha   (                          );
-	virtual void compute_beta_ext(const R *sys,       R *ext);
+    virtual void compute_gamma(const R* sys, const R* par);
+    virtual void compute_alpha();
+    virtual void compute_beta_ext(const R* sys, R* ext);
 };
 }
 }

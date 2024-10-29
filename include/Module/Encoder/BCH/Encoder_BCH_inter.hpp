@@ -5,35 +5,35 @@
 #ifndef ENCODER_BCH_INTER_HPP_
 #define ENCODER_BCH_INTER_HPP_
 
-#include <vector>
 #include <mipp.h>
+#include <vector>
 
-#include "Tools/Code/BCH/BCH_polynomial_generator.hpp"
 #include "Module/Encoder/BCH/Encoder_BCH.hpp"
+#include "Tools/Code/BCH/BCH_polynomial_generator.hpp"
 
 namespace aff3ct
 {
 namespace module
 {
-template <typename B = int>
+template<typename B = int>
 class Encoder_BCH_inter : public Encoder_BCH<B>
 {
-protected:
-	std::vector<B> U_K_reordered;
-	std::vector<B> par_reordered;
+  protected:
+    std::vector<B> U_K_reordered;
+    std::vector<B> par_reordered;
 
-	std::vector<mipp::Reg<B>> regs_par;
+    std::vector<mipp::Reg<B>> regs_par;
 
-public:
-	Encoder_BCH_inter(const int& K, const int& N, const tools::BCH_polynomial_generator<B>& GF);
+  public:
+    Encoder_BCH_inter(const int& K, const int& N, const tools::BCH_polynomial_generator<B>& GF);
 
-	virtual ~Encoder_BCH_inter() = default;
+    virtual ~Encoder_BCH_inter() = default;
 
-	virtual Encoder_BCH_inter<B>* clone() const;
+    virtual Encoder_BCH_inter<B>* clone() const;
 
-protected:
-	virtual void  _encode(const B *U_K, B *X_N, const size_t frame_id);
-	virtual void __encode(const B *U_K, B *bb);
+  protected:
+    virtual void _encode(const B* U_K, B* X_N, const size_t frame_id);
+    virtual void __encode(const B* U_K, B* bb);
 };
 }
 }

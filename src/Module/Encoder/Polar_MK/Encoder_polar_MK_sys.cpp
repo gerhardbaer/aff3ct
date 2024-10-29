@@ -1,52 +1,56 @@
 #include <sstream>
+#include <streampu.hpp>
 #include <string>
 
-#include "Tools/Exception/exception.hpp"
 #include "Module/Encoder/Polar_MK/Encoder_polar_MK_sys.hpp"
 
 using namespace aff3ct;
 using namespace aff3ct::module;
 
-template <typename B>
-Encoder_polar_MK_sys<B>
-::Encoder_polar_MK_sys(const int& K, const int& N, const tools::Polar_code& code, const std::vector<bool>& frozen_bits)
-: Encoder_polar_MK<B>(K, N, code, frozen_bits)
+template<typename B>
+Encoder_polar_MK_sys<B>::Encoder_polar_MK_sys(const int& K,
+                                              const int& N,
+                                              const tools::Polar_code& code,
+                                              const std::vector<bool>& frozen_bits)
+  : Encoder_polar_MK<B>(K, N, code, frozen_bits)
 {
-	const std::string name = "Encoder_polar_MK_sys";
-	this->set_name(name);
-	this->set_sys(true);
+    const std::string name = "Encoder_polar_MK_sys";
+    this->set_name(name);
+    for (auto& t : this->tasks)
+        t->set_replicability(true);
+    this->set_sys(true);
 
-	if (!this->code.can_be_systematic())
-	{
-		std::stringstream message;
-		message << "This polar code does not support systematic encoding.";
-		throw tools::runtime_error(__FILE__, __LINE__, __func__, message.str());
-	}
+    if (!this->code.can_be_systematic())
+    {
+        std::stringstream message;
+        message << "This polar code does not support systematic encoding.";
+        throw spu::tools::runtime_error(__FILE__, __LINE__, __func__, message.str());
+    }
 }
 
-template <typename B>
-Encoder_polar_MK_sys<B>* Encoder_polar_MK_sys<B>
-::clone() const
+template<typename B>
+Encoder_polar_MK_sys<B>*
+Encoder_polar_MK_sys<B>::clone() const
 {
-	auto m = new Encoder_polar_MK_sys(*this);
-	m->deep_copy(*this);
-	return m;
+    auto m = new Encoder_polar_MK_sys(*this);
+    m->deep_copy(*this);
+    return m;
 }
 
-template <typename B>
-void Encoder_polar_MK_sys<B>
-::_encode(const B *U_K, B *X_N, const size_t frame_id)
+template<typename B>
+void
+Encoder_polar_MK_sys<B>::_encode(const B* U_K, B* X_N, const size_t frame_id)
 {
-	this->convert(U_K, X_N);
+    this->convert(U_K, X_N);
 
-	// first time encode
-	this->light_encode(X_N);
+    // first time encode
+    this->light_encode(X_N);
 
-	for (auto i = 0; i < this->N; i++)
-		X_N[i] = (B)(!this->frozen_bits[i]) && X_N[i];
+    for (auto i = 0; i < this->N; i++)
+        X_N[i] = (B)(!this->frozen_bits[i]) && X_N[i];
 
-	// second time encode because of systematic encoder
-	this->light_encode(X_N);
+    // second time encode because of systematic encoder
+    this->light_encode(X_N);
 }
 
 // ==================================================================================== explicit template instantiation

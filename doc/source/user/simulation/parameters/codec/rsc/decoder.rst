@@ -9,22 +9,26 @@
 """"""""""""""""""
 
    :Type: text
-   :Allowed values: ``BCJR`` ``CHASE`` ``ML``
+   :Allowed values: ``BCJR`` ``CHASE`` ``ML`` ``VITERBI`` ``PLVA``
    :Examples: ``--dec-type BCJR``
 
 |factory::Decoder::p+type,D|
 
 Description of the allowed values:
 
-+-----------+------------------------------------------------------------------+
-| Value     | Description                                                      |
-+===========+==================================================================+
-| ``BCJR``  | Select the |BCJR| algorithm from :cite:`Bahl1974`.               |
-+-----------+------------------------------------------------------------------+
-| ``CHASE`` | See the common :ref:`dec-common-dec-type` parameter.             |
-+-----------+------------------------------------------------------------------+
-| ``ML``    | See the common :ref:`dec-common-dec-type` parameter.             |
-+-----------+------------------------------------------------------------------+
++--------------+------------------------------------------------------------------+
+| Value        | Description                                                      |
++==============+==================================================================+
+| ``BCJR``     | Select the |BCJR| algorithm from :cite:`Bahl1974`.               |
++--------------+------------------------------------------------------------------+
+| ``VITERBI``  | Select the Viterbi algorithm from :cite:`Viterbi1967`.           |
++--------------+------------------------------------------------------------------+
+| ``PLVA``     | Select the |PLVA| algorithm from :cite:`Seshadri1994`.           |
++--------------+------------------------------------------------------------------+
+| ``CHASE``    | See the common :ref:`dec-common-dec-type` parameter.             |
++--------------+------------------------------------------------------------------+
+| ``ML``       | See the common :ref:`dec-common-dec-type` parameter.             |
++--------------+------------------------------------------------------------------+
 
 .. _dec-rsc-dec-implem:
 
@@ -133,6 +137,17 @@ for *Max* is the simplest :math:`\max^*` approximation with only a
 
 .. note:: The |BCJR| with the :math:`\max` approximation is also called the
    max-log-|MAP| algorithm.
+
+.. _dec-rsc-dec-lists:
+
+``--dec-lists, -L``
+"""""""""""""""""""
+
+   :Type: integer
+   :Default: ``8``
+   :Examples: ``--dec-lists 32``
+
+|factory::Decoder_RSC::p+lists,L|
 
 References
 """"""""""

@@ -12,7 +12,7 @@ Please send a
 [GitHub Pull Request to AFF3CT](https://github.com/aff3ct/aff3ct/pull/new/)
 with a clear list of what you've done (read more about
 [pull requests](https://help.github.com/articles/about-pull-requests/)). Please
-make your modifications on the ``development`` branch, any pull to the
+make your modifications on the ``develop`` branch, any pull to the
 ``master`` branch will be refused (the ``master`` is dedecated to the releases).
 
 Always write a clear log message for your commits. One-line messages are fine

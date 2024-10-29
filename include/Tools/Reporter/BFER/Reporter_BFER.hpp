@@ -12,22 +12,22 @@ namespace aff3ct
 {
 namespace tools
 {
-template <typename B = int32_t>
+template<typename B = int32_t>
 class Reporter_BFER : public Reporter_monitor<module::Monitor_BFER<B>>
 {
-public:
-	using Rm = Reporter_monitor<module::Monitor_BFER<B>>;
-	using typename Rm::M;
-	using typename Rm::report_t;
+  public:
+    using Rm = Reporter_monitor<module::Monitor_BFER<B>>;
+    using typename Rm::M;
+    using typename Rm::report_t;
 
-	explicit Reporter_BFER(const M &monitor);
+    explicit Reporter_BFER(const M& monitor);
 
-	virtual ~Reporter_BFER() = default;
+    virtual ~Reporter_BFER() = default;
 
-	report_t report(bool final = false);
+    report_t report(bool final = false);
 
-private:
-	void create_groups();
+  private:
+    void create_groups();
 };
 }
 }

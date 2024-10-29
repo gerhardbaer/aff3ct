@@ -4,28 +4,28 @@
 #include <iostream>
 
 #include "Factory/Simulation/BFER/BFER_std.hpp"
-#include "Simulation/Simulation.hpp"
 #include "Launcher/Launcher.hpp"
+#include "Simulation/Simulation.hpp"
 
 namespace aff3ct
 {
 namespace launcher
 {
-template <typename B = int, typename R = float, typename Q = R>
+template<typename B = int, typename R = float, typename Q = R>
 class BFER_std : public Launcher
 {
-protected:
-	factory::BFER_std params;
+  protected:
+    factory::BFER_std params;
 
-public:
-	BFER_std(const int argc, const char **argv, std::ostream &stream = std::cout);
-	virtual ~BFER_std() = default;
+  public:
+    BFER_std(const int argc, const char** argv, std::ostream& stream = std::cout);
+    virtual ~BFER_std() = default;
 
-protected:
-	virtual void get_description_args();
-	virtual void store_args();
+  protected:
+    virtual void get_description_args();
+    virtual void store_args();
 
-	virtual simulation::Simulation* build_simu();
+    virtual simulation::Simulation* build_simu();
 };
 }
 }

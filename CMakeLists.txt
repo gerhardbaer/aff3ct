@@ -24,6 +24,7 @@ option(AFF3CT_MPI                "Enable the MPI support"                       
 option(AFF3CT_POLAR_BIT_PACKING  "Enable the bit packing technique for Polar code SC decoding"              ON )
 option(AFF3CT_POLAR_BOUNDS       "Enable the use of the external Tal & Vardy Polar best channels generator" OFF)
 option(AFF3CT_OVERRIDE_VERSION   "Compile without .git directory, provided a version and hash"              OFF)
+option(AFF3CT_INCLUDE_SPU_LIB    "Include the StreamPU library inside the AFF3CT library"                   ON )
 
 if (AFF3CT_COMPILE_EXE OR AFF3CT_COMPILE_STATIC_LIB OR AFF3CT_COMPILE_SHARED_LIB)
     set(AFF3CT_COMPILE_OBJ ON)
@@ -171,15 +172,17 @@ assign_source_group(${source_files})
 # --------------------------------------------------------------------------------------------------------- SUB-PROJECT
 # ---------------------------------------------------------------------------------------------------------------------
 
-# aff3ct-core
-if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/lib/aff3ct-core/include/aff3ct-core.hpp")
-    option(AFF3CT_CORE_COMPILE_STATIC_LIB "" OFF)
-    option(AFF3CT_CORE_COMPILE_SHARED_LIB "" OFF)
-    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/lib/aff3ct-core/ EXCLUDE_FROM_ALL)
-    message(STATUS "AFF3CT - Sub-project found: aff3ct-core")
-else()
-    message(FATAL_ERROR "AFF3CT - aff3ct-core can't be found, try to init the submodule with the following cmd:\n"
-                        "$ git submodule update --init --recursive")
+if (AFF3CT_INCLUDE_SPU_LIB)
+    # StreamPU
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/lib/streampu/CMakeLists.txt")
+        option(SPU_COMPILE_STATIC_LIB "" OFF)
+        option(SPU_COMPILE_SHARED_LIB "" OFF)
+        add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/lib/streampu/ EXCLUDE_FROM_ALL)
+        message(STATUS "AFF3CT - Sub-project found: StreamPU")
+    else()
+        message(FATAL_ERROR "AFF3CT - StreamPU can't be found, try to init the submodule with the following cmd:\n"
+                            "$ git submodule update --init --recursive")
+    endif()
 endif()
 
 # cli
@@ -212,7 +215,11 @@ endif()
 
 # Binary
 if(AFF3CT_COMPILE_EXE)
-    add_executable(aff3ct-bin $<TARGET_OBJECTS:aff3ct-obj> $<TARGET_OBJECTS:aff3ct-core-obj> $<TARGET_OBJECTS:cli-obj>)
+    if(AFF3CT_INCLUDE_SPU_LIB)
+        add_executable(aff3ct-bin $<TARGET_OBJECTS:aff3ct-obj> $<TARGET_OBJECTS:cli-obj> $<TARGET_OBJECTS:spu-obj>)
+    else()
+        add_executable(aff3ct-bin $<TARGET_OBJECTS:aff3ct-obj> $<TARGET_OBJECTS:cli-obj>)
+    endif()
     set_target_properties(aff3ct-bin PROPERTIES
                                      OUTPUT_NAME aff3ct-${AFF3CT_VERSION_FULL}
                                      POSITION_INDEPENDENT_CODE ON) # set -fpie
@@ -221,14 +228,22 @@ endif(AFF3CT_COMPILE_EXE)
 
 # Library
 if(AFF3CT_COMPILE_SHARED_LIB)
-    add_library(aff3ct-shared-lib SHARED $<TARGET_OBJECTS:aff3ct-obj> $<TARGET_OBJECTS:aff3ct-core-obj> $<TARGET_OBJECTS:cli-obj>)
+    if(AFF3CT_INCLUDE_SPU_LIB)
+        add_library(aff3ct-shared-lib SHARED $<TARGET_OBJECTS:aff3ct-obj> $<TARGET_OBJECTS:cli-obj> $<TARGET_OBJECTS:spu-obj>)
+    else()
+        add_library(aff3ct-shared-lib SHARED $<TARGET_OBJECTS:aff3ct-obj> $<TARGET_OBJECTS:cli-obj>)
+    endif()
     set_target_properties(aff3ct-shared-lib PROPERTIES
                                             OUTPUT_NAME aff3ct-${AFF3CT_VERSION_FULL}
                                             POSITION_INDEPENDENT_CODE ON) # set -fpic
     message(STATUS "AFF3CT - Compile: shared library")
 endif(AFF3CT_COMPILE_SHARED_LIB)
 if(AFF3CT_COMPILE_STATIC_LIB)
-    add_library(aff3ct-static-lib STATIC $<TARGET_OBJECTS:aff3ct-obj> $<TARGET_OBJECTS:aff3ct-core-obj> $<TARGET_OBJECTS:cli-obj>)
+    if(AFF3CT_INCLUDE_SPU_LIB)
+        add_library(aff3ct-static-lib STATIC $<TARGET_OBJECTS:aff3ct-obj> $<TARGET_OBJECTS:cli-obj> $<TARGET_OBJECTS:spu-obj>)
+    else()
+        add_library(aff3ct-static-lib STATIC $<TARGET_OBJECTS:aff3ct-obj> $<TARGET_OBJECTS:cli-obj>)
+    endif()
     set_target_properties(aff3ct-static-lib PROPERTIES
                                             OUTPUT_NAME aff3ct-${AFF3CT_VERSION_FULL}
                                             POSITION_INDEPENDENT_CODE ON) # set -fpic
@@ -305,11 +320,19 @@ else()
     message(FATAL_ERROR "AFF3CT_PREC='${AFF3CT_PREC}' and should be '8', '16', '32', '64' or 'MULTI'.")
 endif()
 
-if(AFF3CT_CORE_COLORS)
-    aff3ct_target_compile_definitions(PUBLIC AFF3CT_CORE_COLORS)
-endif()
-if(AFF3CT_CORE_BACKTRACE)
-    aff3ct_target_compile_definitions(PUBLIC AFF3CT_CORE_BACKTRACE)
+if (AFF3CT_INCLUDE_SPU_LIB)
+    if(SPU_COLORS)
+        aff3ct_target_compile_definitions(PUBLIC SPU_COLORS)
+    endif()
+    if(SPU_STACKTRACE)
+        aff3ct_target_compile_definitions(PUBLIC SPU_STACKTRACE)
+    endif()
+    if(SPU_STACKTRACE_SEGFAULT)
+        aff3ct_target_compile_definitions(PUBLIC SPU_STACKTRACE_SEGFAULT)
+        if (CPPTRACE_UNWIND_WITH_LIBUNWIND)
+            aff3ct_target_compile_definitions(PUBLIC SPU_STACKTRACE_SEGFAULT_LIBUNWIND)
+        endif()
+    endif()
 endif()
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -358,10 +381,13 @@ endmacro()
 aff3ct_target_include_directories(PRIVATE "src"     "aff3ct")
 aff3ct_target_include_directories(PUBLIC  "include" "aff3ct")
 
-# AFF3CT-core headers
-aff3ct_target_include_directories(PUBLIC  "lib/aff3ct-core/include"          "aff3ct")
-aff3ct_target_include_directories(PRIVATE "lib/aff3ct-core/src"              "aff3ct")
-aff3ct_target_include_directories(PUBLIC  "lib/aff3ct-core/lib/rang/include" "rang"  )
+# StreamPU headers
+if(AFF3CT_INCLUDE_SPU_LIB)
+    aff3ct_target_include_directories(PUBLIC  "lib/streampu/include"              "streampu")
+    aff3ct_target_include_directories(PRIVATE "lib/streampu/src"                  "streampu")
+    aff3ct_target_include_directories(PUBLIC  "lib/streampu/lib/rang/include"     "rang"    )
+    aff3ct_target_include_directories(PUBLIC  "lib/streampu/lib/cpptrace/include" "cpptrace")
+endif()
 
 # cli headers
 aff3ct_target_include_directories(PUBLIC "lib/cli/src" "cli")
@@ -406,6 +432,27 @@ macro(aff3ct_target_link_libraries privacy lib)
     endif(AFF3CT_COMPILE_STATIC_LIB)
 endmacro()
 
+# cpptrace
+if (AFF3CT_INCLUDE_SPU_LIB)
+    if(SPU_STACKTRACE OR SPU_STACKTRACE_SEGFAULT)
+        aff3ct_target_link_libraries(PUBLIC cpptrace::cpptrace)
+    endif()
+else()
+    find_package(cpptrace CONFIG 0.4.1)
+    if (cpptrace_FOUND)
+        message(STATUS "AFF3CT - Library found: cpptrace")
+        aff3ct_target_link_libraries(PUBLIC cpptrace::cpptrace)
+    endif()
+endif()
+
+# StreamPU
+if (NOT AFF3CT_INCLUDE_SPU_LIB)
+    find_package(StreamPU CONFIG 1.0.2 REQUIRED)
+    message(STATUS "AFF3CT - Library found: StreamPU")
+    target_link_libraries(aff3ct-obj PUBLIC spu::spu-static-lib)
+    aff3ct_target_link_libraries(PUBLIC spu::spu-static-lib)
+endif()
+
 # GSL
 if(AFF3CT_LINK_GSL)
     aff3ct_target_compile_definitions(PUBLIC "AFF3CT_CHANNEL_GSL")
@@ -431,15 +478,17 @@ if(AFF3CT_LINK_MKL)
 endif(AFF3CT_LINK_MKL)
 
 # hwloc
-if(AFF3CT_CORE_LINK_HWLOC)
-    aff3ct_target_compile_definitions(PUBLIC "AFF3CT_CORE_HWLOC")
+if(SPU_LINK_HWLOC)
+    if(AFF3CT_INCLUDE_SPU_LIB)
+        aff3ct_target_compile_definitions(PUBLIC "SPU_HWLOC")
+    endif()
 
     find_package(Hwloc REQUIRED QUIET)
     if(Hwloc_FOUND)
         aff3ct_target_include_directories2(PUBLIC "${Hwloc_INCLUDE_DIRS}")
         aff3ct_target_link_libraries(PUBLIC "${Hwloc_LIBRARIES}")
     endif(Hwloc_FOUND)
-endif(AFF3CT_CORE_LINK_HWLOC)
+endif(SPU_LINK_HWLOC)
 
 # MPI
 if(AFF3CT_MPI)
@@ -482,24 +531,33 @@ aff3ct_target_link_libraries(PUBLIC Threads::Threads)
 # -------------------------------------------------------------------------------------------------------------- EXPORT
 # ---------------------------------------------------------------------------------------------------------------------
 
+if (AFF3CT_INCLUDE_SPU_LIB)
+    if(SPU_STACKTRACE OR SPU_STACKTRACE_SEGFAULT)
+        set(CPPTRACE_TARGETS cpptrace-lib)
+        if (CPPTRACE_GET_SYMBOLS_WITH_LIBDWARF)
+            set(CPPTRACE_TARGETS ${CPPTRACE_TARGETS} dwarf)
+        endif()
+    else()
+        set(CPPTRACE_TARGETS)
+    endif()
+else()
+	set(CPPTRACE_TARGETS "")
+endif()
+
 if (AFF3CT_COMPILE_SHARED_LIB AND NOT AFF3CT_COMPILE_STATIC_LIB)
-    export(TARGETS
-           aff3ct-shared-lib
+    export(TARGETS aff3ct-shared-lib ${CPPTRACE_TARGETS}
            NAMESPACE aff3ct::
            FILE "lib/cmake/aff3ct-${AFF3CT_VERSION_FULL}/aff3ct-config.cmake")
 endif()
 
 if (AFF3CT_COMPILE_STATIC_LIB AND NOT AFF3CT_COMPILE_SHARED_LIB)
-    export(TARGETS
-           aff3ct-static-lib
+    export(TARGETS aff3ct-static-lib ${CPPTRACE_TARGETS}
            NAMESPACE aff3ct::
            FILE "lib/cmake/aff3ct-${AFF3CT_VERSION_FULL}/aff3ct-config.cmake")
 endif()
 
 if(AFF3CT_COMPILE_SHARED_LIB AND AFF3CT_COMPILE_STATIC_LIB)
-    export(TARGETS
-           aff3ct-shared-lib
-           aff3ct-static-lib
+    export(TARGETS aff3ct-shared-lib aff3ct-static-lib ${CPPTRACE_TARGETS}
            NAMESPACE aff3ct::
            FILE "lib/cmake/aff3ct-${AFF3CT_VERSION_FULL}/aff3ct-config.cmake")
 endif()
@@ -563,19 +621,6 @@ if (AFF3CT_COMPILE_SHARED_LIB OR AFF3CT_COMPILE_STATIC_LIB)
             COMPONENT headers
             FILES_MATCHING PATTERN "*.hxx")
 
-    install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/lib/aff3ct-core/include/"
-            DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/aff3ct-${AFF3CT_VERSION_FULL}/aff3ct
-            COMPONENT headers
-            FILES_MATCHING PATTERN "*.h")
-    install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/lib/aff3ct-core/include/"
-            DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/aff3ct-${AFF3CT_VERSION_FULL}/aff3ct
-            COMPONENT headers
-            FILES_MATCHING PATTERN "*.hpp")
-    install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/lib/aff3ct-core/include/"
-            DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/aff3ct-${AFF3CT_VERSION_FULL}/aff3ct
-            COMPONENT headers
-            FILES_MATCHING PATTERN "*.hxx")
-
     install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/lib/date/include/date/"
             DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/aff3ct-${AFF3CT_VERSION_FULL}/date
             COMPONENT headers
@@ -588,10 +633,7 @@ if (AFF3CT_COMPILE_SHARED_LIB OR AFF3CT_COMPILE_STATIC_LIB)
             DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/aff3ct-${AFF3CT_VERSION_FULL}/MIPP
             COMPONENT headers
             FILES_MATCHING PATTERN "*.hxx")
-    install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/lib/aff3ct-core/lib/rang/include/"
-            DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/aff3ct-${AFF3CT_VERSION_FULL}/rang
-            COMPONENT headers
-            FILES_MATCHING PATTERN "*.hpp")
+
     install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/lib/cli/src/"
             DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/aff3ct-${AFF3CT_VERSION_FULL}/cli
             COMPONENT headers
@@ -600,6 +642,33 @@ if (AFF3CT_COMPILE_SHARED_LIB OR AFF3CT_COMPILE_STATIC_LIB)
             DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/aff3ct-${AFF3CT_VERSION_FULL}/cli
             COMPONENT headers
             FILES_MATCHING PATTERN "*.hxx")
+
+    if(AFF3CT_INCLUDE_SPU_LIB)
+        install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/lib/streampu/include/"
+                DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/aff3ct-${AFF3CT_VERSION_FULL}/streampu
+                COMPONENT headers
+                FILES_MATCHING PATTERN "*.h")
+        install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/lib/streampu/include/"
+                DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/aff3ct-${AFF3CT_VERSION_FULL}/streampu
+                COMPONENT headers
+                FILES_MATCHING PATTERN "*.hpp")
+        install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/lib/streampu/include/"
+                DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/aff3ct-${AFF3CT_VERSION_FULL}/streampu
+                COMPONENT headers
+                FILES_MATCHING PATTERN "*.hxx")
+
+        install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/lib/streampu/lib/rang/include/"
+                DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/aff3ct-${AFF3CT_VERSION_FULL}/rang
+                COMPONENT headers
+                FILES_MATCHING PATTERN "*.hpp")
+
+        if(SPU_STACKTRACE OR SPU_STACKTRACE_SEGFAULT)
+            install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/lib/streampu/lib/cpptrace/include/"
+                    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/aff3ct-${AFF3CT_VERSION_FULL}/cpptrace
+                    COMPONENT headers
+                    FILES_MATCHING PATTERN "*.hpp")
+        endif()
+    endif()
 endif()
 
 if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/doc/build/latex/AFF3CT.pdf")

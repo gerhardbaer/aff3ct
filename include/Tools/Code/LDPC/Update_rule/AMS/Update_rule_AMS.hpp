@@ -13,46 +13,46 @@ namespace aff3ct
 {
 namespace tools
 {
-template <typename R = float, proto_min<R> MIN = min_star_linear2>
+template<typename R = float, proto_min<R> MIN = min_star_linear2>
 class Update_rule_AMS // Approximate Min Star
 {
-protected:
-	const std::string name;
-	int sign;
-	R min;
-	R delta_min;
-	R delta;
-	int n_ite;
-	int ite;
+  protected:
+    const std::string name;
+    int sign;
+    R min;
+    R delta_min;
+    R delta;
+    int n_ite;
+    int ite;
 
-public:
-	Update_rule_AMS();
+  public:
+    Update_rule_AMS();
 
-	virtual ~Update_rule_AMS() = default;
+    virtual ~Update_rule_AMS() = default;
 
-	inline std::string get_name() const;
+    inline std::string get_name() const;
 
-	inline void begin_decoding(const int n_ite);
+    inline void begin_decoding(const int n_ite);
 
-	inline void begin_ite(const int ite);
+    inline void begin_ite(const int ite);
 
-	// incoming values from the variable nodes into the check nodes
-	inline void begin_chk_node_in(const int chk_id, const int chk_degree);
+    // incoming values from the variable nodes into the check nodes
+    inline void begin_chk_node_in(const int chk_id, const int chk_degree);
 
-	inline void compute_chk_node_in(const int var_id, const R var_val);
+    inline void compute_chk_node_in(const int var_id, const R var_val);
 
-	inline void end_chk_node_in();
+    inline void end_chk_node_in();
 
-	// outcomming values from the check nodes into the variable nodes
-	inline void begin_chk_node_out(const int chk_id, const int chk_degree);
+    // outcomming values from the check nodes into the variable nodes
+    inline void begin_chk_node_out(const int chk_id, const int chk_degree);
 
-	inline R compute_chk_node_out(const int var_id, const R var_val);
+    inline R compute_chk_node_out(const int var_id, const R var_val);
 
-	inline void end_chk_node_out();
+    inline void end_chk_node_out();
 
-	inline void end_ite();
+    inline void end_ite();
 
-	inline void end_decoding();
+    inline void end_decoding();
 };
 }
 }

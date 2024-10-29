@@ -39,101 +39,101 @@ namespace tools
  */
 class PRNG_MT19937
 {
-protected:
-	std::vector<uint32_t> MT;
-	unsigned index;
+  protected:
+    std::vector<uint32_t> MT;
+    unsigned index;
 
-public:
-	/*!
-	 * \brief Constructor.
-	 *
-	 * \param seed: a seed to initialize the PRNG.
-	 */
-	explicit PRNG_MT19937(const uint32_t seed = 0);
+  public:
+    /*!
+     * \brief Constructor.
+     *
+     * \param seed: a seed to initialize the PRNG.
+     */
+    explicit PRNG_MT19937(const uint32_t seed = 0);
 
-	/*!
-	 * \brief Destructor.
-	 */
-	virtual ~PRNG_MT19937();
+    /*!
+     * \brief Destructor.
+     */
+    virtual ~PRNG_MT19937();
 
-	/*!
-	 * \brief Initialize the PRNG with given seed value.
-	 *
-	 * \param seed: a seed.
-	 */
-	void seed(const uint32_t seed);
+    /*!
+     * \brief Initialize the PRNG with given seed value.
+     *
+     * \param seed: a seed.
+     */
+    void seed(const uint32_t seed);
 
-	/*!
-	 * \brief Extract a pseudo-random integer in the range 0 ... RAND_MAX. (LIBC REPLACEMENT FUNCTION).
-	 *
-	 * \return a pseudo random number.
-	 */
-	int rand();
+    /*!
+     * \brief Extract a pseudo-random integer in the range 0 ... RAND_MAX. (LIBC REPLACEMENT FUNCTION).
+     *
+     * \return a pseudo random number.
+     */
+    int rand();
 
-	/*!
-	 * \brief Extract a pseudo-random unsigned 32-bit integer in the range 0 ... UINT32_MAX.
-	 *
-	 * \return a pseudo random number.
-	 */
-	uint32_t rand_u32();
+    /*!
+     * \brief Extract a pseudo-random unsigned 32-bit integer in the range 0 ... UINT32_MAX.
+     *
+     * \return a pseudo random number.
+     */
+    uint32_t rand_u32();
 
-	/*!
-	 * \brief Combine two unsigned 32-bit pseudo-random numbers into one 64-bit.
-	 *
-	 * \return a pseudo random number.
-	 */
-	uint64_t rand_u64();
+    /*!
+     * \brief Combine two unsigned 32-bit pseudo-random numbers into one 64-bit.
+     *
+     * \return a pseudo random number.
+     */
+    uint64_t rand_u64();
 
-	/*!
-	 * \brief Return a random float in the CLOSED range [0, 1]
-	 * Mnemonic: randf_co = random float 0=closed 1=closed.
-	 *
-	 * \return a pseudo random number.
-	 */
-	float randf_cc();
+    /*!
+     * \brief Return a random float in the CLOSED range [0, 1]
+     * Mnemonic: randf_co = random float 0=closed 1=closed.
+     *
+     * \return a pseudo random number.
+     */
+    float randf_cc();
 
-	/*!
-	 * \brief Return a random float in the OPEN range [0, 1>
-	 * Mnemonic: randf_co = random float 0=closed 1=open.
-	 *
-	 * \return a pseudo random number.
-	 */
-	float randf_co();
+    /*!
+     * \brief Return a random float in the OPEN range [0, 1>
+     * Mnemonic: randf_co = random float 0=closed 1=open.
+     *
+     * \return a pseudo random number.
+     */
+    float randf_co();
 
-	/*!
-	 * \brief Return a random float in the OPEN range <0, 1>
-	 * Mnemonic: randf_oo = random float 0=open 1=open.
-	 *
-	 * \return a pseudo random number.
-	 */
-	float randf_oo();
+    /*!
+     * \brief Return a random float in the OPEN range <0, 1>
+     * Mnemonic: randf_oo = random float 0=open 1=open.
+     *
+     * \return a pseudo random number.
+     */
+    float randf_oo();
 
-	/*!
-	 * \brief Return a random double in the CLOSED range [0, 1]
-	 * Mnemonic: randd_co = random double 0=closed 1=closed.
-	 *
-	 * \return a pseudo random number.
-	 */
-	double randd_cc();
+    /*!
+     * \brief Return a random double in the CLOSED range [0, 1]
+     * Mnemonic: randd_co = random double 0=closed 1=closed.
+     *
+     * \return a pseudo random number.
+     */
+    double randd_cc();
 
-	/*!
-	 * \brief Return a random double in the OPEN range [0, 1>
-	 * Mnemonic: randd_co = random double 0=closed 1=open.
-	 *
-	 * \return a pseudo random number.
-	 */
-	double randd_co();
+    /*!
+     * \brief Return a random double in the OPEN range [0, 1>
+     * Mnemonic: randd_co = random double 0=closed 1=open.
+     *
+     * \return a pseudo random number.
+     */
+    double randd_co();
 
-	/*!
-	 * \brief Return a random double in the OPEN range <0, 1>
-	 * Mnemonic: randd_oo = random double 0=open 1=open.
-	 *
-	 * \return a pseudo random number.
-	 */
-	double randd_oo();
+    /*!
+     * \brief Return a random double in the OPEN range <0, 1>
+     * Mnemonic: randd_oo = random double 0=open 1=open.
+     *
+     * \return a pseudo random number.
+     */
+    double randd_oo();
 
-private:
-	void generate_numbers();
+  private:
+    void generate_numbers();
 };
 }
 }

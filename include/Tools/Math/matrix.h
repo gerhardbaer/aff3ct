@@ -31,66 +31,65 @@ namespace tools
 //      exit.
 
 // real general matrix multiplication: C = A * B, tB is B transposed, tC is C transposed
-template <typename T, class AT = std::allocator<T>>
-inline void rgemm(const int M, const int N, const int K,
-                  const std::vector<T,AT> &A,
-                  const std::vector<T,AT> &tB,
-                        std::vector<T,AT> &tC);
+template<typename T, class AT = std::allocator<T>>
+inline void
+rgemm(const int M,
+      const int N,
+      const int K,
+      const std::vector<T, AT>& A,
+      const std::vector<T, AT>& tB,
+      std::vector<T, AT>& tC);
 
-template <typename T>
-inline void rgemm(const int M, const int N, const int K,
-                  const T *A,
-                  const T *tB,
-                        T *tC);
+template<typename T>
+inline void
+rgemm(const int M, const int N, const int K, const T* A, const T* tB, T* tC);
 
 // complex general matrix multiplication: C = A * B, tB is B transposed, tC is C transposed
-template <typename T, class AT = std::allocator<T>>
-inline void cgemm(const int M, const int N, const int K,
-                  const std::vector<T,AT> &A,
-                  const std::vector<T,AT> &tB,
-                        std::vector<T,AT> &tC);
+template<typename T, class AT = std::allocator<T>>
+inline void
+cgemm(const int M,
+      const int N,
+      const int K,
+      const std::vector<T, AT>& A,
+      const std::vector<T, AT>& tB,
+      std::vector<T, AT>& tC);
 
-template <typename T>
-inline void cgemm(const int M, const int N, const int K,
-                  const T *A,
-                  const T *tB,
-                        T *tC);
+template<typename T>
+inline void
+cgemm(const int M, const int N, const int K, const T* A, const T* tB, T* tC);
 
 // keep only the real part in C
-template <typename T, class AT = std::allocator<T>>
-inline void cgemm_r(const int M, const int N, const int K,
-                    const std::vector<T,AT> &A,
-                    const std::vector<T,AT> &tB,
-                          std::vector<T,AT> &tC);
+template<typename T, class AT = std::allocator<T>>
+inline void
+cgemm_r(const int M,
+        const int N,
+        const int K,
+        const std::vector<T, AT>& A,
+        const std::vector<T, AT>& tB,
+        std::vector<T, AT>& tC);
 
-template <typename T>
-inline void cgemm_r(const int M, const int N, const int K,
-                    const T *A,
-                    const T *tB,
-                          T *tC);
+template<typename T>
+inline void
+cgemm_r(const int M, const int N, const int K, const T* A, const T* tB, T* tC);
 
 // real transpose : B = tA, where A is of size M*N and then B of size N*M
-template <typename T, class AT = std::allocator<T>>
-inline void real_transpose(const int M, const int N,
-                           const std::vector<T,AT> &A,
-                                 std::vector<T,AT> &B);
+template<typename T, class AT = std::allocator<T>>
+inline void
+real_transpose(const int M, const int N, const std::vector<T, AT>& A, std::vector<T, AT>& B);
 
-template <typename T>
-inline void real_transpose(const int M, const int N,
-                          const T *A,
-                                T *B);
+template<typename T>
+inline void
+real_transpose(const int M, const int N, const T* A, T* B);
 
 // complex transpose : B_real = tA_real and B_imag = -tA_imag, where A is of size M*N*2 and then B of size N*M*2
 // (with both complex elements) : B's elements are the conjugates of A's
-template <typename T, class AT = std::allocator<T>>
-inline void complex_transpose(const int M, const int N,
-                              const std::vector<T,AT> &A,
-                                    std::vector<T,AT> &B);
+template<typename T, class AT = std::allocator<T>>
+inline void
+complex_transpose(const int M, const int N, const std::vector<T, AT>& A, std::vector<T, AT>& B);
 
-template <typename T>
-inline void complex_transpose(const int M, const int N,
-                              const T *A,
-                                    T *B);
+template<typename T>
+inline void
+complex_transpose(const int M, const int N, const T* A, T* B);
 }
 }
 

@@ -13,19 +13,19 @@ namespace aff3ct
 {
 namespace tools
 {
-template <typename R = float>
+template<typename R = float>
 class Constellation_user : public Constellation<R>
 {
-public:
-	using typename Constellation<R>::S;
+  public:
+    using typename Constellation<R>::S;
 
-	/*
-	 * \param n_bps is the number of bits per symbol
-	 */
-	explicit Constellation_user(const std::string& const_path);
+    /*
+     * \param n_bps is the number of bits per symbol
+     */
+    explicit Constellation_user(const std::string& const_path);
 
-private:
-	static std::vector<S> read_constellation(const std::string& const_path);
+  private:
+    static std::vector<S> read_constellation(const std::string& const_path);
 };
 
 }

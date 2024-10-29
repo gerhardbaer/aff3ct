@@ -11,23 +11,23 @@ namespace aff3ct
 {
 namespace module
 {
-template <typename B = int, typename R = float, typename Q = R>
-class Modem_OOK : public Modem<B,R,Q>
+template<typename B = int, typename R = float, typename Q = R>
+class Modem_OOK : public Modem<B, R, Q>
 {
-public:
-	Modem_OOK(const int N);
-	virtual ~Modem_OOK() = default;
+  public:
+    Modem_OOK(const int N);
+    virtual ~Modem_OOK() = default;
 
-	virtual Modem_OOK<B,R,Q>* clone() const;
+    virtual Modem_OOK<B, R, Q>* clone() const;
 
-	static bool is_complex_mod();
-	static bool is_complex_fil();
-	static int size_mod(const int N);
-	static int size_fil(const int N);
+    static bool is_complex_mod();
+    static bool is_complex_fil();
+    static int size_mod(const int N);
+    static int size_fil(const int N);
 
-protected:
-	void _modulate(                 const B *X_N1, R *X_N2, const size_t frame_id);
-	void   _filter(const float *CP, const R *Y_N1, R *Y_N2, const size_t frame_id);
+  protected:
+    void _modulate(const B* X_N1, R* X_N2, const size_t frame_id);
+    void _filter(const float* CP, const R* Y_N1, R* Y_N2, const size_t frame_id);
 };
 }
 }

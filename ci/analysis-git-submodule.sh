@@ -7,14 +7,14 @@ then
 	exit 1
 fi
 
-cd lib/aff3ct-core
-HASH_AFF3CT_CORE=$(git rev-parse --short HEAD)
+cd lib/streampu
+HASH_SPU=$(git rev-parse --short HEAD)
 git checkout ${GIT_BRANCH}
 git pull origin ${GIT_BRANCH}
-CONTAIN_COMMIT_AFF3CT_CORE=$(git branch ${GIT_BRANCH} --contains ${HASH_AFF3CT_CORE})
-if [ -z "$CONTAIN_COMMIT_AFF3CT_CORE" ]
+CONTAIN_COMMIT_SPU=$(git branch ${GIT_BRANCH} --contains ${HASH_SPU})
+if [ -z "$CONTAIN_COMMIT_SPU" ]
 then
-	echo "The '$HASH_AFF3CT_CORE' commit of the 'aff3ct-core' submodule does not exist in the '${GIT_BRANCH}' branch."
+	echo "The '$HASH_SPU' commit of the 'streampu' submodule does not exist in the '${GIT_BRANCH}' branch."
 	exit 1
 fi
 cd ../..

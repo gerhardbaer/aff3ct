@@ -9,73 +9,74 @@
 #include <string>
 #include <vector>
 
-#include "Tools/Interface/Interface_set_seed.hpp"
-#include "Tools/Interface/Interface_get_set_n_frames.hpp"
-#ifndef _MSC_VER
-#include "Tools/Interface/Interface_clone.hpp"
-#endif
+#include <streampu.hpp>
 
 namespace aff3ct
 {
 namespace tools
 {
-template <typename T = uint32_t>
+template<typename T = uint32_t>
 #ifdef _MSC_VER
-class Interleaver_core : public Interface_set_seed, public Interface_get_set_n_frames
+class Interleaver_core
+  : public spu::tools::Interface_set_seed
+  , public spu::tools::Interface_get_set_n_frames
 #else
-class Interleaver_core : public Interface_set_seed, public Interface_get_set_n_frames, public Interface_clone
+class Interleaver_core
+  : public spu::tools::Interface_set_seed
+  , public spu::tools::Interface_get_set_n_frames
+  , public spu::tools::Interface_clone
 #endif
 {
-protected:
-	const int size;
-	const std::string name;
-	      size_t n_frames;
-	      bool uniform;
-	      bool initialized;
-	std::vector<T> pi;     /*!< Lookup table for the interleaving process :
-	                            the interleaving output position i can be found in the source at the position 'pi[i]' */
-	std::vector<T> pi_inv; /*!< Lookup table for the deinterleaving process */
+  protected:
+    const int size;
+    const std::string name;
+    size_t n_frames;
+    bool uniform;
+    bool initialized;
+    std::vector<T> pi;     /*!< Lookup table for the interleaving process :
+                                the interleaving output position i can be found in the source at the position 'pi[i]' */
+    std::vector<T> pi_inv; /*!< Lookup table for the deinterleaving process */
 
-public:
-	/*!
-	 * \brief Constructor.
-	 *
-	 * \param size:     number of the data to interleave or to deinterleave.
-	 * \param n_frames: number of frames to process in the Interleaver.
-	 * \param name:     Interleaver's name.
-	 */
-	Interleaver_core(const int size, const std::string &name, const bool uniform = false);
+  public:
+    /*!
+     * \brief Constructor.
+     *
+     * \param size:     number of the data to interleave or to deinterleave.
+     * \param n_frames: number of frames to process in the Interleaver.
+     * \param name:     Interleaver's name.
+     */
+    Interleaver_core(const int size, const std::string& name, const bool uniform = false);
 
-	virtual ~Interleaver_core() = default;
+    virtual ~Interleaver_core() = default;
 
-	virtual Interleaver_core<T>* clone() const = 0;
+    virtual Interleaver_core<T>* clone() const = 0;
 
-	const std::vector<T>& get_lut() const;
+    const std::vector<T>& get_lut() const;
 
-	const std::vector<T>& get_lut_inv() const;
+    const std::vector<T>& get_lut_inv() const;
 
-	int get_size() const;
+    int get_size() const;
 
-	inline size_t get_n_frames() const;
+    inline size_t get_n_frames() const;
 
-	virtual void set_n_frames(const size_t n_frames);
+    virtual void set_n_frames(const size_t n_frames);
 
-	bool is_uniform() const;
+    bool is_uniform() const;
 
-	std::string get_name() const;
+    std::string get_name() const;
 
-	void refresh();
+    void refresh();
 
-	virtual void set_seed(const int seed);
+    virtual void set_seed(const int seed);
 
-	virtual void reinitialize();
+    virtual void reinitialize();
 
-protected:
-	bool is_initialized() const;
+  protected:
+    bool is_initialized() const;
 
-	void init();
+    void init();
 
-	virtual void gen_lut(T *lut, const size_t frame_id) = 0;
+    virtual void gen_lut(T* lut, const size_t frame_id) = 0;
 };
 }
 }

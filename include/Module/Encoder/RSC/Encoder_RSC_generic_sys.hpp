@@ -13,24 +13,26 @@ namespace aff3ct
 {
 namespace module
 {
-template <typename B = int>
+template<typename B = int>
 class Encoder_RSC_generic_sys : public Encoder_RSC_sys<B>
 {
-private:
-	std::vector<int> out_parity;
-	std::vector<int> next_state;
-	std::vector<int> sys_tail;
+  private:
+    std::vector<int> out_parity;
+    std::vector<int> next_state;
+    std::vector<int> sys_tail;
 
-public:
-	Encoder_RSC_generic_sys(const int& K, const int& N, const bool buffered_encoding = true,
-	                        std::vector<int> poly = std::vector<int>({5,7}));
-	virtual ~Encoder_RSC_generic_sys() = default;
+  public:
+    Encoder_RSC_generic_sys(const int& K,
+                            const int& N,
+                            const bool buffered_encoding = true,
+                            std::vector<int> poly = std::vector<int>({ 5, 7 }));
+    virtual ~Encoder_RSC_generic_sys() = default;
 
-	virtual Encoder_RSC_generic_sys<B>* clone() const;
+    virtual Encoder_RSC_generic_sys<B>* clone() const;
 
-protected:
-	virtual int inner_encode(const int bit_sys, int &state);
-	virtual int tail_bit_sys(const int &state             );
+  protected:
+    virtual int inner_encode(const int bit_sys, int& state);
+    virtual int tail_bit_sys(const int& state);
 };
 }
 }

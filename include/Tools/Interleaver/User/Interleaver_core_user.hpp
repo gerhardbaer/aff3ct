@@ -15,26 +15,25 @@ namespace aff3ct
 {
 namespace tools
 {
-template <typename T = uint32_t>
+template<typename T = uint32_t>
 class Interleaver_core_user : public Interleaver_core<T>
 {
-private:
-	std::vector<std::vector<T>> pi_buffer;
-	int cur_itl_id;
+  private:
+    std::vector<std::vector<T>> pi_buffer;
+    int cur_itl_id;
 
-public:
-	Interleaver_core_user(const int size, const std::string &filename);
-	virtual ~Interleaver_core_user() = default;
+  public:
+    Interleaver_core_user(const int size, const std::string& filename);
+    virtual ~Interleaver_core_user() = default;
 
-	virtual Interleaver_core_user<T>* clone() const;
+    virtual Interleaver_core_user<T>* clone() const;
 
-	virtual void reinitialize();
+    virtual void reinitialize();
 
-protected:
-	void gen_lut(T *lut, const size_t frame_id);
+  protected:
+    void gen_lut(T* lut, const size_t frame_id);
 };
 }
 }
 
-#endif	/* INTERLEAVER_CORE_USER_HPP */
-
+#endif /* INTERLEAVER_CORE_USER_HPP */

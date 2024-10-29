@@ -7,25 +7,31 @@
 
 #include <cstdint>
 #include <memory>
+#include <streampu.hpp>
 #include <vector>
-
-#include "Runtime/Task/Task.hpp"
-#include "Runtime/Socket/Socket.hpp"
-#include "Module/Module.hpp"
 
 namespace aff3ct
 {
 namespace module
 {
-	namespace qnt
-	{
-		enum class tsk : size_t { process, SIZE };
+namespace qnt
+{
+enum class tsk : size_t
+{
+    process,
+    SIZE
+};
 
-		namespace sck
-		{
-			enum class process : size_t { Y_N1, Y_N2, status };
-		}
-	}
+namespace sck
+{
+enum class process : size_t
+{
+    Y_N1,
+    Y_N2,
+    status
+};
+}
+}
 
 /*!
  * \class Quantizer
@@ -38,47 +44,49 @@ namespace module
  * Please use Quantizer for inheritance (instead of Quantizer).
  * If Q is a floating-point representation then the Quantizer does nothing more than a cast.
  */
-template <typename R = float, typename Q = int>
-class Quantizer : public Module
+template<typename R = float, typename Q = int>
+class Quantizer : public spu::module::Stateful
 {
-public:
-	inline runtime::Task&   operator[](const qnt::tsk          t);
-	inline runtime::Socket& operator[](const qnt::sck::process s);
+  public:
+    inline spu::runtime::Task& operator[](const qnt::tsk t);
+    inline spu::runtime::Socket& operator[](const qnt::sck::process s);
 
-protected:
-	const int N; /*!< Size of one frame (= number of bits in one frame) */
+  protected:
+    const int N; /*!< Size of one frame (= number of bits in one frame) */
 
-public:
-	/*!
-	 * \brief Constructor.
-	 *
-	 * \param N: size of one frame.
-	 */
-	Quantizer(const int N);
+  public:
+    /*!
+     * \brief Constructor.
+     *
+     * \param N: size of one frame.
+     */
+    Quantizer(const int N);
 
-	/*!
-	 * \brief Destructor.
-	 */
-	virtual ~Quantizer() = default;
+    /*!
+     * \brief Destructor.
+     */
+    virtual ~Quantizer() = default;
 
-	virtual Quantizer<R,Q>* clone() const;
+    virtual Quantizer<R, Q>* clone() const;
 
-	int get_N() const;
+    int get_N() const;
 
-	/*!
-	 * \brief Quantizes the data if Q is a fixed-point representation, does nothing else.
-	 *
-	 * \param Y_N1: a vector of floating-point data.
-	 * \param Y_N2: a vector of quantized data (fixed-point representation).
-	 */
-	template <class AR = std::allocator<R>, class AQ = std::allocator<Q>>
-	void process(const std::vector<R,AR>& Y_N1, std::vector<Q,AQ>& Y_N2, const int frame_id = -1,
-	             const bool managed_memory = true);
+    /*!
+     * \brief Quantizes the data if Q is a fixed-point representation, does nothing else.
+     *
+     * \param Y_N1: a vector of floating-point data.
+     * \param Y_N2: a vector of quantized data (fixed-point representation).
+     */
+    template<class AR = std::allocator<R>, class AQ = std::allocator<Q>>
+    void process(const std::vector<R, AR>& Y_N1,
+                 std::vector<Q, AQ>& Y_N2,
+                 const int frame_id = -1,
+                 const bool managed_memory = true);
 
-	void process(const R *Y_N1, Q *Y_N2, const int frame_id = -1, const bool managed_memory = true);
+    void process(const R* Y_N1, Q* Y_N2, const int frame_id = -1, const bool managed_memory = true);
 
-protected:
-	virtual void _process(const R *Y_N1, Q *Y_N2, const size_t frame_id);
+  protected:
+    virtual void _process(const R* Y_N1, Q* Y_N2, const size_t frame_id);
 };
 }
 }

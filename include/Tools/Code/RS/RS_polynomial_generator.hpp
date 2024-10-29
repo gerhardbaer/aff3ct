@@ -17,24 +17,24 @@ namespace tools
 {
 class RS_polynomial_generator : public Galois<int>
 {
-protected:
-	const int t;
-	const int d;
+  protected:
+    const int t;
+    const int d;
 
-	std::vector<int> g; // coefficients of the generator polynomial, g(x)
+    std::vector<int> g; // coefficients of the generator polynomial, g(x)
 
-public:
-	RS_polynomial_generator(const int& N, const int& t);
-	virtual ~RS_polynomial_generator() = default;
+  public:
+    RS_polynomial_generator(const int& N, const int& t);
+    virtual ~RS_polynomial_generator() = default;
 
-	int get_d      () const;
-	int get_t      () const; // get the correction power
-	int get_n_rdncy() const; // get the number of redundancy bits
+    int get_d() const;
+    int get_t() const;       // get the correction power
+    int get_n_rdncy() const; // get the number of redundancy bits
 
-	const std::vector<int>& get_g() const; // get the coefficients of the generator polynomial
+    const std::vector<int>& get_g() const; // get the coefficients of the generator polynomial
 
-private:
-	void compute_polynomial();
+  private:
+    void compute_polynomial();
 };
 }
 }

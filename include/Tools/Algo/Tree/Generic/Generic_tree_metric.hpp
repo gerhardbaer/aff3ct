@@ -11,22 +11,22 @@ namespace aff3ct
 {
 namespace tools
 {
-template <typename T = float, typename R = int>
+template<typename T = float, typename R = int>
 class Generic_tree_metric : public Generic_tree<T>
 {
-protected:
-	R path_metric; /*!< Metric of the tree. */
+  protected:
+    R path_metric; /*!< Metric of the tree. */
 
-public:
-	explicit Generic_tree_metric(const int depth, const int base, R path_metric);
+  public:
+    explicit Generic_tree_metric(const int depth, const int base, R path_metric);
 
-	explicit Generic_tree_metric(const std::vector<uint32_t> &sequence, R path_metric);
+    explicit Generic_tree_metric(const std::vector<uint32_t>& sequence, R path_metric);
 
-	virtual ~Generic_tree_metric();
+    virtual ~Generic_tree_metric();
 
-	R get_path_metric() const;
+    R get_path_metric() const;
 
-	void set_path_metric(R path_metric);
+    void set_path_metric(R path_metric);
 };
 }
 }
@@ -36,4 +36,3 @@ public:
 #endif
 
 #endif /* GENERIC_TREE_METRIC_HPP_ */
-

@@ -7,17 +7,17 @@ namespace simulation
 {
 class Simulation
 {
-protected:
-	bool simu_error;
+  protected:
+    bool simu_error;
 
-public:
-	Simulation();
+  public:
+    Simulation();
 
-	virtual ~Simulation() = default;
+    virtual ~Simulation() = default;
 
-	virtual void launch() = 0;
+    virtual void launch() = 0;
 
-	bool is_error() const;
+    bool is_error() const;
 };
 }
 }

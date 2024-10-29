@@ -19,13 +19,13 @@ namespace tools
 template<typename T, bool count_unknown_symbols>
 struct Boolean_diff
 {
-	static inline mipp::Reg<T> apply(const mipp::Reg<T>& in1, const mipp::Reg<T>& in2);
+    static inline mipp::Reg<T> apply(const mipp::Reg<T>& in1, const mipp::Reg<T>& in2);
 
-	static inline mipp::Reg<T> apply(const mipp::Reg<T>& in);
+    static inline mipp::Reg<T> apply(const mipp::Reg<T>& in);
 
-	static inline T apply(const T& in1, const T& in2);
+    static inline T apply(const T& in1, const T& in2);
 
-	static inline T apply(const T& in);
+    static inline T apply(const T& in);
 };
 
 }

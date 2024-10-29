@@ -5,13 +5,13 @@
 #ifndef FACTORY_PUNCTURER_LDPC_HPP
 #define FACTORY_PUNCTURER_LDPC_HPP
 
-#include <string>
-#include <map>
 #include <cli.hpp>
+#include <map>
+#include <string>
 
-#include "Tools/Factory/Header.hpp"
-#include "Module/Puncturer/Puncturer.hpp"
 #include "Factory/Module/Puncturer/Puncturer.hpp"
+#include "Module/Puncturer/Puncturer.hpp"
+#include "Tools/Factory/Header.hpp"
 
 namespace aff3ct
 {
@@ -21,24 +21,24 @@ extern const std::string Puncturer_LDPC_name;
 extern const std::string Puncturer_LDPC_prefix;
 class Puncturer_LDPC : public Puncturer
 {
-public:
-	// ----------------------------------------------------------------------------------------------------- PARAMETERS
-	// optional parameters
-	std::vector<bool> pattern;
+  public:
+    // ----------------------------------------------------------------------------------------------------- PARAMETERS
+    // optional parameters
+    std::vector<bool> pattern;
 
-	// -------------------------------------------------------------------------------------------------------- METHODS
-	explicit Puncturer_LDPC(const std::string &p = Puncturer_LDPC_prefix);
-	virtual ~Puncturer_LDPC() = default;
-	Puncturer_LDPC* clone() const;
+    // -------------------------------------------------------------------------------------------------------- METHODS
+    explicit Puncturer_LDPC(const std::string& p = Puncturer_LDPC_prefix);
+    virtual ~Puncturer_LDPC() = default;
+    Puncturer_LDPC* clone() const;
 
-	// parameters construction
-	void get_description(cli::Argument_map_info &args) const;
-	void store          (const cli::Argument_map_value &vals);
-	void get_headers    (std::map<std::string,tools::header_list>& headers, const bool full = true) const;
+    // parameters construction
+    void get_description(cli::Argument_map_info& args) const;
+    void store(const cli::Argument_map_value& vals);
+    void get_headers(std::map<std::string, tools::header_list>& headers, const bool full = true) const;
 
-	// builder
-	template <typename B = int, typename Q = float>
-	module::Puncturer<B,Q>* build() const;
+    // builder
+    template<typename B = int, typename Q = float>
+    module::Puncturer<B, Q>* build() const;
 };
 }
 }

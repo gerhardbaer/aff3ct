@@ -345,6 +345,7 @@ rst_epilog = """
 .. |OSs|       replace:: :abbr:`OSs      (Operating Systems)`
 .. |PAM|       replace:: :abbr:`PAM      (Pulse-Amplitude Modulation)`
 .. |PDF|       replace:: :abbr:`PDF      (Probability Density Function)`
+.. |PLVA|      replace:: :abbr:`PLVA     (Parallel List Viterbi Algorithm)`
 .. |PRNG|      replace:: :abbr:`PRNG     (Pseudo Random Number Generator)`
 .. |PRNGs|     replace:: :abbr:`PRNGs    (Pseudo Random Number Generators)`
 .. |PSK|       replace:: :abbr:`PSK      (Phase-Shift Keying)`
