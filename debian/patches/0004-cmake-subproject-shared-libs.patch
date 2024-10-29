@@ -19,7 +19,7 @@
 +endif()
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -225,6 +225,17 @@
+@@ -218,6 +218,17 @@
      check_pie_supported()
  endif()
  
@@ -37,54 +37,52 @@
  # Object
  if(AFF3CT_COMPILE_OBJ)
      add_library(aff3ct-bin-obj OBJECT ${bin_source_files})
-@@ -238,7 +249,9 @@
- 
+@@ -232,10 +243,11 @@
  # Binary
  if(AFF3CT_COMPILE_EXE)
--    add_executable(aff3ct-bin $<TARGET_OBJECTS:aff3ct-bin-obj> $<TARGET_OBJECTS:aff3ct-core-obj> $<TARGET_OBJECTS:cli-obj>)
-+    add_executable(aff3ct-bin $<TARGET_OBJECTS:aff3ct-bin-obj>)
-+    append_subproject(aff3ct-bin aff3ct-core AFF3CT_CORE ON)
+     if(AFF3CT_INCLUDE_SPU_LIB)
+-        add_executable(aff3ct-bin $<TARGET_OBJECTS:aff3ct-bin-obj> $<TARGET_OBJECTS:cli-obj> $<TARGET_OBJECTS:spu-obj>)
++        add_executable(aff3ct-bin $<TARGET_OBJECTS:aff3ct-bin-obj> $<TARGET_OBJECTS:spu-obj>)
+     else()
+-        add_executable(aff3ct-bin $<TARGET_OBJECTS:aff3ct-bin-obj> $<TARGET_OBJECTS:cli-obj>)
++        add_executable(aff3ct-bin $<TARGET_OBJECTS:aff3ct-bin-obj>)
+     endif()
 +    append_subproject(aff3ct-bin cli CLI ON)
      set_target_properties(aff3ct-bin PROPERTIES
                                       OUTPUT_NAME aff3ct${AFF3CT_EXE_SUFFIX}-${AFF3CT_VERSION_FULL}
                                       POSITION_INDEPENDENT_CODE ON) # set -fpie
-@@ -247,7 +260,9 @@
- 
+@@ -245,10 +257,11 @@
  # Library
  if(AFF3CT_COMPILE_SHARED_LIB)
--    add_library(aff3ct-shared-lib SHARED $<TARGET_OBJECTS:aff3ct-lib-obj> $<TARGET_OBJECTS:aff3ct-core-obj> $<TARGET_OBJECTS:cli-obj>)
-+    add_library(aff3ct-shared-lib SHARED $<TARGET_OBJECTS:aff3ct-lib-obj>)
-+    append_subproject(aff3ct-shared-lib aff3ct-core AFF3CT_CORE ON)
+     if(AFF3CT_INCLUDE_SPU_LIB)
+-        add_library(aff3ct-shared-lib SHARED $<TARGET_OBJECTS:aff3ct-lib-obj> $<TARGET_OBJECTS:cli-obj> $<TARGET_OBJECTS:spu-obj>)
++        add_library(aff3ct-shared-lib SHARED $<TARGET_OBJECTS:aff3ct-lib-obj> $<TARGET_OBJECTS:spu-obj>)
+     else()
+-        add_library(aff3ct-shared-lib SHARED $<TARGET_OBJECTS:aff3ct-lib-obj> $<TARGET_OBJECTS:cli-obj>)
++        add_library(aff3ct-shared-lib SHARED $<TARGET_OBJECTS:aff3ct-lib-obj>)
+     endif()
 +    append_subproject(aff3ct-shared-lib cli CLI ON)
      set_target_properties(aff3ct-shared-lib PROPERTIES
                                              OUTPUT_NAME aff3ct${AFF3CT_LIB_SUFFIX}-${AFF3CT_VERSION_FULL}
                                              POSITION_INDEPENDENT_CODE ON) # set -fpic
-@@ -257,7 +272,9 @@
-     message(STATUS "AFF3CT - Compile: shared library")
+@@ -259,10 +272,11 @@
  endif(AFF3CT_COMPILE_SHARED_LIB)
  if(AFF3CT_COMPILE_STATIC_LIB)
--    add_library(aff3ct-static-lib STATIC $<TARGET_OBJECTS:aff3ct-lib-obj> $<TARGET_OBJECTS:aff3ct-core-obj> $<TARGET_OBJECTS:cli-obj>)
-+    add_library(aff3ct-static-lib STATIC $<TARGET_OBJECTS:aff3ct-lib-obj>)
-+    append_subproject(aff3ct-static-lib aff3ct-core AFF3CT_CORE OFF)
+     if(AFF3CT_INCLUDE_SPU_LIB)
+-        add_library(aff3ct-static-lib STATIC $<TARGET_OBJECTS:aff3ct-lib-obj> $<TARGET_OBJECTS:cli-obj> $<TARGET_OBJECTS:spu-obj>)
++        add_library(aff3ct-static-lib STATIC $<TARGET_OBJECTS:aff3ct-lib-obj> $<TARGET_OBJECTS:spu-obj>)
+     else()
+-        add_library(aff3ct-static-lib STATIC $<TARGET_OBJECTS:aff3ct-lib-obj> $<TARGET_OBJECTS:cli-obj>)
++        add_library(aff3ct-static-lib STATIC $<TARGET_OBJECTS:aff3ct-lib-obj>)
+     endif()
 +    append_subproject(aff3ct-static-lib cli CLI OFF)
      set_target_properties(aff3ct-static-lib PROPERTIES
                                              OUTPUT_NAME aff3ct${AFF3CT_LIB_SUFFIX}-${AFF3CT_VERSION_FULL}
                                              POSITION_INDEPENDENT_CODE ON) # set -fpic
-@@ -551,6 +568,28 @@
+@@ -604,6 +618,17 @@
  # ------------------------------------------------------------------------------------------------------------- INSTALL
  # ---------------------------------------------------------------------------------------------------------------------
  
-+if(AFF3CT_CORE_COMPILE_SHARED_LIB)
-+    install(TARGETS aff3ct-core-shared-lib
-+            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/
-+            COMPONENT subproject-library)
-+endif()
-+if(AFF3CT_CORE_COMPILE_STATIC_LIB)
-+    install(TARGETS aff3ct-core-static-lib
-+            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}/
-+            COMPONENT subproject-library)
-+endif()
-+
 +if(CLI_COMPILE_SHARED_LIB)
 +    install(TARGETS cli-shared-lib
 +            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/
@@ -99,13 +97,3 @@
  if(AFF3CT_COMPILE_EXE)
      install(TARGETS aff3ct-bin
              RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}/
---- a/lib/aff3ct-core/CMakeLists.txt
-+++ b/lib/aff3ct-core/CMakeLists.txt
-@@ -93,6 +93,7 @@
-     add_library(aff3ct-core-shared-lib SHARED $<TARGET_OBJECTS:aff3ct-core-obj>)
-     set_target_properties(aff3ct-core-shared-lib PROPERTIES
-                                                  OUTPUT_NAME aff3ct-core
-+                                                 SOVERSION 0
-                                                  POSITION_INDEPENDENT_CODE ON) # set -fpic
-     list(APPEND aff3ct_core_targets_list aff3ct-core-shared-lib)
-     message(STATUS "AFF3CT-core - Compile: shared library")
