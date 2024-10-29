@@ -22,6 +22,7 @@ SIMD_TARGETS_DEPS	= $(foreach simd,$(SIMD_TARGETS),$(builddir)/$(simd).d)
 SIMD_TARGETS_sse4	= -march=x86-64-v2
 SIMD_TARGETS_avx2	= -march=x86-64-v3
 SIMD_TARGETS_avx512	= -march=x86-64-v4
+SIMD_CMAKE_FLAGS_avx512	= -DAFF3CT_POLAR_BIT_PACKING=OFF
 SIMD_COMPONENTS_	= library simulator # for all SIMD targets
 SIMD_COMPONENTS_none	= configuration references documentation
 SIMD_COMPONENTS_none	+= headers subproject-library
@@ -50,7 +51,7 @@ $(builddir)/%.configured:
 	CPPFLAGS="$(CPPFLAGS) -DAFF3CT_SIMD_$(*F)" \
 	CFLAGS="$(CFLAGS) $(SIMD_TARGETS_$(*F))" \
 	CXXFLAGS="$(CXXFLAGS) $(SIMD_TARGETS_$(*F))" \
-	dh_auto_configure -B"$(builddir)/$(*F)" -- \
+	dh_auto_configure -B"$(builddir)/$(*F)" -- $(SIMD_CMAKE_FLAGS_$(*F)) \
 		-DCMAKE_BUILD_TYPE=RelWithDebInfo \
 		-DCLI_COMPILE_SHARED_LIB=ON \
 		-DCLI_COMPILE_STATIC_LIB=OFF \
