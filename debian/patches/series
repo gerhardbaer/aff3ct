@@ -1,1 +1,2 @@
 0001-cmake-allow-for-SOVERSION-to-be-overriden.patch
+0010-cmake-no-spu-static-lib.patch
