@@ -9,20 +9,22 @@ Subject: [PATCH 2/2] cmake: allow suffixes to executables and libraries.
 
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -25,6 +25,12 @@
+@@ -25,8 +25,14 @@
  option(AFF3CT_POLAR_BOUNDS       "Enable the use of the external Tal & Vardy Polar best channels generator" OFF)
  option(AFF3CT_OVERRIDE_VERSION   "Compile without .git directory, provided a version and hash"              OFF)
  option(AFF3CT_OVERRIDE_SOVERSION "Fix shared library SONAME version"                                        OFF)
 +option(AFF3CT_OVERRIDE_SUFFIX    "Use the supplied suffix to executable and library names"                  OFF)
-+
+ option(AFF3CT_INCLUDE_SPU_LIB    "Include the StreamPU library inside the AFF3CT library"                   ON )
+ 
 +if (AFF3CT_OVERRIDE_SUFFIX)
 +    set(AFF3CT_EXE_SUFFIX "-${AFF3CT_OVERRIDE_SUFFIX}")
 +    set(AFF3CT_LIB_SUFFIX "-${AFF3CT_OVERRIDE_SUFFIX}")
 +endif()
- 
++
  if (AFF3CT_COMPILE_EXE OR AFF3CT_COMPILE_STATIC_LIB OR AFF3CT_COMPILE_SHARED_LIB)
      set(AFF3CT_COMPILE_OBJ ON)
-@@ -125,7 +131,7 @@
+ else()
+@@ -126,7 +132,7 @@
  # Auto generate cmake config version file to link with AFF3CT library (only if an AFF3CT library has been compiled)
  if (AFF3CT_COMPILE_STATIC_LIB OR AFF3CT_COMPILE_SHARED_LIB)
      configure_file("${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/aff3ct-config-version.cmake.in"
@@ -31,37 +33,37 @@ Subject: [PATCH 2/2] cmake: allow suffixes to executables and libraries.
  endif()
  
  # ------------------------------------------------------------------------------------------------------------- STRINGS
-@@ -215,7 +221,7 @@
- if(AFF3CT_COMPILE_EXE)
-     add_executable(aff3ct-bin $<TARGET_OBJECTS:aff3ct-obj> $<TARGET_OBJECTS:aff3ct-core-obj> $<TARGET_OBJECTS:cli-obj>)
+@@ -222,7 +228,7 @@
+         add_executable(aff3ct-bin $<TARGET_OBJECTS:aff3ct-obj> $<TARGET_OBJECTS:cli-obj>)
+     endif()
      set_target_properties(aff3ct-bin PROPERTIES
 -                                     OUTPUT_NAME aff3ct-${AFF3CT_VERSION_FULL}
 +                                     OUTPUT_NAME aff3ct${AFF3CT_EXE_SUFFIX}-${AFF3CT_VERSION_FULL}
                                       POSITION_INDEPENDENT_CODE ON) # set -fpie
      message(STATUS "AFF3CT - Compile: executable")
  endif(AFF3CT_COMPILE_EXE)
-@@ -224,7 +230,7 @@
- if(AFF3CT_COMPILE_SHARED_LIB)
-     add_library(aff3ct-shared-lib SHARED $<TARGET_OBJECTS:aff3ct-obj> $<TARGET_OBJECTS:aff3ct-core-obj> $<TARGET_OBJECTS:cli-obj>)
+@@ -235,7 +241,7 @@
+         add_library(aff3ct-shared-lib SHARED $<TARGET_OBJECTS:aff3ct-obj> $<TARGET_OBJECTS:cli-obj>)
+     endif()
      set_target_properties(aff3ct-shared-lib PROPERTIES
 -                                            OUTPUT_NAME aff3ct-${AFF3CT_VERSION_FULL}
 +                                            OUTPUT_NAME aff3ct${AFF3CT_LIB_SUFFIX}-${AFF3CT_VERSION_FULL}
                                              POSITION_INDEPENDENT_CODE ON) # set -fpic
      if(DEFINED AFF3CT_OVERRIDE_SOVERSION)
          set_property(TARGET aff3ct-shared-lib APPEND PROPERTY SOVERSION ${AFF3CT_OVERRIDE_SOVERSION})
-@@ -234,7 +240,7 @@
- if(AFF3CT_COMPILE_STATIC_LIB)
-     add_library(aff3ct-static-lib STATIC $<TARGET_OBJECTS:aff3ct-obj> $<TARGET_OBJECTS:aff3ct-core-obj> $<TARGET_OBJECTS:cli-obj>)
+@@ -249,7 +255,7 @@
+         add_library(aff3ct-static-lib STATIC $<TARGET_OBJECTS:aff3ct-obj> $<TARGET_OBJECTS:cli-obj>)
+     endif()
      set_target_properties(aff3ct-static-lib PROPERTIES
 -                                            OUTPUT_NAME aff3ct-${AFF3CT_VERSION_FULL}
 +                                            OUTPUT_NAME aff3ct${AFF3CT_LIB_SUFFIX}-${AFF3CT_VERSION_FULL}
                                              POSITION_INDEPENDENT_CODE ON) # set -fpic
      message(STATUS "AFF3CT - Compile: static library")
  endif(AFF3CT_COMPILE_STATIC_LIB)
-@@ -489,23 +495,23 @@
+@@ -555,20 +561,20 @@
+ 
  if (AFF3CT_COMPILE_SHARED_LIB AND NOT AFF3CT_COMPILE_STATIC_LIB)
-     export(TARGETS
-            aff3ct-shared-lib
+     export(TARGETS aff3ct-shared-lib ${CPPTRACE_TARGETS}
 -           NAMESPACE aff3ct::
 -           FILE "lib/cmake/aff3ct-${AFF3CT_VERSION_FULL}/aff3ct-config.cmake")
 +           NAMESPACE aff3ct${AFF3CT_LIB_SUFFIX}::
@@ -69,8 +71,7 @@ Subject: [PATCH 2/2] cmake: allow suffixes to executables and libraries.
  endif()
  
  if (AFF3CT_COMPILE_STATIC_LIB AND NOT AFF3CT_COMPILE_SHARED_LIB)
-     export(TARGETS
-            aff3ct-static-lib
+     export(TARGETS aff3ct-static-lib ${CPPTRACE_TARGETS}
 -           NAMESPACE aff3ct::
 -           FILE "lib/cmake/aff3ct-${AFF3CT_VERSION_FULL}/aff3ct-config.cmake")
 +           NAMESPACE aff3ct${AFF3CT_LIB_SUFFIX}::
@@ -78,9 +79,7 @@ Subject: [PATCH 2/2] cmake: allow suffixes to executables and libraries.
  endif()
  
  if(AFF3CT_COMPILE_SHARED_LIB AND AFF3CT_COMPILE_STATIC_LIB)
-     export(TARGETS
-            aff3ct-shared-lib
-            aff3ct-static-lib
+     export(TARGETS aff3ct-shared-lib aff3ct-static-lib ${CPPTRACE_TARGETS}
 -           NAMESPACE aff3ct::
 -           FILE "lib/cmake/aff3ct-${AFF3CT_VERSION_FULL}/aff3ct-config.cmake")
 +           NAMESPACE aff3ct${AFF3CT_LIB_SUFFIX}::
@@ -88,7 +87,7 @@ Subject: [PATCH 2/2] cmake: allow suffixes to executables and libraries.
  endif()
  
  # ---------------------------------------------------------------------------------------------------------------------
-@@ -518,6 +524,7 @@
+@@ -581,6 +587,7 @@
              COMPONENT simulator)
      if(UNIX)
          install(FILES "${CMAKE_CURRENT_BINARY_DIR}/bin/aff3ct" DESTINATION ${CMAKE_INSTALL_BINDIR}/
@@ -96,7 +95,7 @@ Subject: [PATCH 2/2] cmake: allow suffixes to executables and libraries.
                  PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
                  COMPONENT simulator)
      endif()
-@@ -525,32 +532,32 @@
+@@ -588,32 +595,32 @@
  if(AFF3CT_COMPILE_SHARED_LIB)
      if(WIN32)
          install(TARGETS aff3ct-shared-lib

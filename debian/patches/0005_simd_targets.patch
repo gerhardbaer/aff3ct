@@ -21,7 +21,7 @@
  # Binary
 --- /dev/null
 +++ b/include/aff3ct-simd.hpp
-@@ -0,0 +1,87 @@
+@@ -0,0 +1,71 @@
 +#ifdef AFF3CT_SIMD_all_impl
 +#include "aff3ct-simd-undef.hpp"
 +#endif
@@ -32,9 +32,6 @@
 +#undef MIPP_ISA
 +#undef mipp
 +#undef aff3ct
-+
-+#include "aff3ct-core.hpp"
-+namespace aff3ct_core = aff3ct;
 +
 +#ifdef AFF3CT_SIMD_all_impl
 +#pragma GCC push_options
@@ -81,19 +78,6 @@
 +#else
 +#error "AFF3CT: undefined SIMD target"
 +#endif
-+
-+// Reimport aff3ct-core definitions into SIMD-specific namespace
-+namespace aff3ct {
-+namespace module {
-+using namespace aff3ct_core::module;
-+}
-+namespace runtime {
-+using namespace aff3ct_core::runtime;
-+}
-+namespace tools {
-+using namespace aff3ct_core::tools;
-+}
-+}
 +
 +#include "aff3ct.hpp"
 +

@@ -1,6 +1,6 @@
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -75,7 +75,12 @@
+@@ -76,7 +76,12 @@
  set(LIBRARY_OUTPUT_PATH lib/)
  
  # Generate the source files list
@@ -14,7 +14,7 @@
  
  # ---------------------------------------------------------------------------------------------------------------------
  # ------------------------------------------------------------------------------------------------ GET VERSION FROM GIT
-@@ -126,7 +131,7 @@
+@@ -127,7 +132,7 @@
  # Auto generate a header containing the last Git SHA1
  configure_file("${CMAKE_CURRENT_SOURCE_DIR}/src/Tools/version.cpp.in"
                 "${CMAKE_CURRENT_SOURCE_DIR}/src/Tools/version.cpp" @ONLY)
@@ -23,7 +23,7 @@
  
  # Auto generate cmake config version file to link with AFF3CT library (only if an AFF3CT library has been compiled)
  if (AFF3CT_COMPILE_STATIC_LIB OR AFF3CT_COMPILE_SHARED_LIB)
-@@ -146,7 +151,7 @@
+@@ -147,7 +152,7 @@
      configure_file("${CMAKE_CURRENT_SOURCE_DIR}/src/Tools/Documentation/strings.cpp.in"
                     "${CMAKE_CURRENT_SOURCE_DIR}/src/Tools/Documentation/strings.cpp" @ONLY)
  
@@ -32,7 +32,7 @@
  endif()
  
  # ------------------------------------------------------------------------------------------------------------ SHORTCUT
-@@ -172,7 +177,7 @@
+@@ -173,7 +178,7 @@
      endforeach()
  endfunction(assign_source_group)
  
@@ -41,7 +41,7 @@
  
  # ---------------------------------------------------------------------------------------------------------------------
  # --------------------------------------------------------------------------------------------------------- SUB-PROJECT
-@@ -212,14 +217,18 @@
+@@ -215,17 +220,21 @@
  
  # Object
  if(AFF3CT_COMPILE_OBJ)
@@ -59,29 +59,40 @@
  
  # Binary
  if(AFF3CT_COMPILE_EXE)
--    add_executable(aff3ct-bin $<TARGET_OBJECTS:aff3ct-obj> $<TARGET_OBJECTS:aff3ct-core-obj> $<TARGET_OBJECTS:cli-obj>)
-+    add_executable(aff3ct-bin $<TARGET_OBJECTS:aff3ct-bin-obj> $<TARGET_OBJECTS:aff3ct-core-obj> $<TARGET_OBJECTS:cli-obj>)
+     if(AFF3CT_INCLUDE_SPU_LIB)
+-        add_executable(aff3ct-bin $<TARGET_OBJECTS:aff3ct-obj> $<TARGET_OBJECTS:cli-obj> $<TARGET_OBJECTS:spu-obj>)
++        add_executable(aff3ct-bin $<TARGET_OBJECTS:aff3ct-bin-obj> $<TARGET_OBJECTS:cli-obj> $<TARGET_OBJECTS:spu-obj>)
+     else()
+-        add_executable(aff3ct-bin $<TARGET_OBJECTS:aff3ct-obj> $<TARGET_OBJECTS:cli-obj>)
++        add_executable(aff3ct-bin $<TARGET_OBJECTS:aff3ct-bin-obj> $<TARGET_OBJECTS:cli-obj>)
+     endif()
      set_target_properties(aff3ct-bin PROPERTIES
                                       OUTPUT_NAME aff3ct${AFF3CT_EXE_SUFFIX}-${AFF3CT_VERSION_FULL}
-                                      POSITION_INDEPENDENT_CODE ON) # set -fpie
-@@ -228,7 +237,7 @@
- 
+@@ -236,9 +245,9 @@
  # Library
  if(AFF3CT_COMPILE_SHARED_LIB)
--    add_library(aff3ct-shared-lib SHARED $<TARGET_OBJECTS:aff3ct-obj> $<TARGET_OBJECTS:aff3ct-core-obj> $<TARGET_OBJECTS:cli-obj>)
-+    add_library(aff3ct-shared-lib SHARED $<TARGET_OBJECTS:aff3ct-lib-obj> $<TARGET_OBJECTS:aff3ct-core-obj> $<TARGET_OBJECTS:cli-obj>)
+     if(AFF3CT_INCLUDE_SPU_LIB)
+-        add_library(aff3ct-shared-lib SHARED $<TARGET_OBJECTS:aff3ct-obj> $<TARGET_OBJECTS:cli-obj> $<TARGET_OBJECTS:spu-obj>)
++        add_library(aff3ct-shared-lib SHARED $<TARGET_OBJECTS:aff3ct-lib-obj> $<TARGET_OBJECTS:cli-obj> $<TARGET_OBJECTS:spu-obj>)
+     else()
+-        add_library(aff3ct-shared-lib SHARED $<TARGET_OBJECTS:aff3ct-obj> $<TARGET_OBJECTS:cli-obj>)
++        add_library(aff3ct-shared-lib SHARED $<TARGET_OBJECTS:aff3ct-lib-obj> $<TARGET_OBJECTS:cli-obj>)
+     endif()
      set_target_properties(aff3ct-shared-lib PROPERTIES
                                              OUTPUT_NAME aff3ct${AFF3CT_LIB_SUFFIX}-${AFF3CT_VERSION_FULL}
-                                             POSITION_INDEPENDENT_CODE ON) # set -fpic
-@@ -238,13 +247,22 @@
-     message(STATUS "AFF3CT - Compile: shared library")
+@@ -250,9 +259,9 @@
  endif(AFF3CT_COMPILE_SHARED_LIB)
  if(AFF3CT_COMPILE_STATIC_LIB)
--    add_library(aff3ct-static-lib STATIC $<TARGET_OBJECTS:aff3ct-obj> $<TARGET_OBJECTS:aff3ct-core-obj> $<TARGET_OBJECTS:cli-obj>)
-+    add_library(aff3ct-static-lib STATIC $<TARGET_OBJECTS:aff3ct-lib-obj> $<TARGET_OBJECTS:aff3ct-core-obj> $<TARGET_OBJECTS:cli-obj>)
+     if(AFF3CT_INCLUDE_SPU_LIB)
+-        add_library(aff3ct-static-lib STATIC $<TARGET_OBJECTS:aff3ct-obj> $<TARGET_OBJECTS:cli-obj> $<TARGET_OBJECTS:spu-obj>)
++        add_library(aff3ct-static-lib STATIC $<TARGET_OBJECTS:aff3ct-lib-obj> $<TARGET_OBJECTS:cli-obj> $<TARGET_OBJECTS:spu-obj>)
+     else()
+-        add_library(aff3ct-static-lib STATIC $<TARGET_OBJECTS:aff3ct-obj> $<TARGET_OBJECTS:cli-obj>)
++        add_library(aff3ct-static-lib STATIC $<TARGET_OBJECTS:aff3ct-lib-obj> $<TARGET_OBJECTS:cli-obj>)
+     endif()
      set_target_properties(aff3ct-static-lib PROPERTIES
                                              OUTPUT_NAME aff3ct${AFF3CT_LIB_SUFFIX}-${AFF3CT_VERSION_FULL}
-                                             POSITION_INDEPENDENT_CODE ON) # set -fpic
+@@ -260,6 +269,15 @@
      message(STATUS "AFF3CT - Compile: static library")
  endif(AFF3CT_COMPILE_STATIC_LIB)
  
@@ -97,7 +108,7 @@
  # PPA uploading
  if (AFF3CT_UPLOAD_PPA)
      message(STATUS "AFF3CT - PPA uploading: on")
-@@ -256,7 +274,8 @@
+@@ -271,7 +289,8 @@
  
  macro(aff3ct_target_compile_definitions privacy def)
      if(AFF3CT_COMPILE_OBJ)
@@ -107,7 +118,7 @@
      endif()
      if(AFF3CT_COMPILE_EXE)
          target_compile_definitions(aff3ct-bin ${privacy} $<BUILD_INTERFACE:${def}> $<INSTALL_INTERFACE:${def}>)
-@@ -328,7 +347,10 @@
+@@ -351,7 +370,10 @@
  
  macro(aff3ct_target_include_directories privacy dir_build dir_install)
      if(AFF3CT_COMPILE_OBJ)
@@ -119,7 +130,7 @@
                                     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/${dir_build}/>
                                     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/aff3ct-${AFF3CT_VERSION_FULL}/${dir_install}>)
      endif()
-@@ -351,7 +373,8 @@
+@@ -374,7 +396,8 @@
  
  macro(aff3ct_target_include_directories2 privacy dir)
      if(AFF3CT_COMPILE_OBJ)
@@ -129,3 +140,18 @@
      endif()
      if(AFF3CT_COMPILE_EXE)
          target_include_directories(aff3ct-bin ${privacy} $<BUILD_INTERFACE:${dir}> $<INSTALL_INTERFACE:${dir}>)
+@@ -460,10 +483,12 @@
+     find_package(StreamPU CONFIG 1.0.2 REQUIRED)
+     message(STATUS "AFF3CT - Library found: StreamPU")
+     if (AFF3CT_COMPILE_SHARED_LIB)
+-        target_link_libraries(aff3ct-obj PUBLIC spu::spu-shared-lib)
++        target_link_libraries(aff3ct-bin-obj PUBLIC spu::spu-shared-lib)
++        target_link_libraries(aff3ct-lib-obj PUBLIC spu::spu-shared-lib)
+         aff3ct_target_link_libraries(PUBLIC spu::spu-shared-lib)
+     else()
+-        target_link_libraries(aff3ct-obj PUBLIC spu::spu-static-lib)
++        target_link_libraries(aff3ct-bin-obj PUBLIC spu::spu-static-lib)
++        target_link_libraries(aff3ct-lib-obj PUBLIC spu::spu-static-lib)
+         aff3ct_target_link_libraries(PUBLIC spu::spu-static-lib)
+     endif()
+ endif()
