@@ -1,6 +1,6 @@
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -136,7 +136,7 @@
+@@ -137,7 +137,7 @@
  # Auto generate cmake config version file to link with AFF3CT library (only if an AFF3CT library has been compiled)
  if (AFF3CT_COMPILE_STATIC_LIB OR AFF3CT_COMPILE_SHARED_LIB)
      configure_file("${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/aff3ct-config-version.cmake.in"
@@ -9,33 +9,30 @@
  endif()
  
  # ------------------------------------------------------------------------------------------------------------- STRINGS
-@@ -540,14 +540,14 @@
-     export(TARGETS
-            aff3ct-shared-lib
+@@ -610,19 +610,19 @@
+ if (AFF3CT_COMPILE_SHARED_LIB AND NOT AFF3CT_COMPILE_STATIC_LIB)
+     export(TARGETS aff3ct-shared-lib ${CPPTRACE_TARGETS}
             NAMESPACE aff3ct${AFF3CT_LIB_SUFFIX}::
 -           FILE "lib/cmake/aff3ct-${AFF3CT_VERSION_FULL}/aff3ct${AFF3CT_LIB_SUFFIX}-config.cmake")
 +           FILE "lib/cmake/aff3ct${AFF3CT_LIB_SUFFIX}-${AFF3CT_VERSION_FULL}/aff3ct${AFF3CT_LIB_SUFFIX}-config.cmake")
  endif()
  
  if (AFF3CT_COMPILE_STATIC_LIB AND NOT AFF3CT_COMPILE_SHARED_LIB)
-     export(TARGETS
-            aff3ct-static-lib
+     export(TARGETS aff3ct-static-lib ${CPPTRACE_TARGETS}
             NAMESPACE aff3ct${AFF3CT_LIB_SUFFIX}::
 -           FILE "lib/cmake/aff3ct-${AFF3CT_VERSION_FULL}/aff3ct${AFF3CT_LIB_SUFFIX}-config.cmake")
-+           FILE "lib/cmake/aff3ct${AFF3CT_LIB_SUFFIX}$-${AFF3CT_VERSION_FULL}/aff3ct${AFF3CT_LIB_SUFFIX}-config.cmake")
++           FILE "lib/cmake/aff3ct${AFF3CT_LIB_SUFFIX}-${AFF3CT_VERSION_FULL}/aff3ct${AFF3CT_LIB_SUFFIX}-config.cmake")
  endif()
  
  if(AFF3CT_COMPILE_SHARED_LIB AND AFF3CT_COMPILE_STATIC_LIB)
-@@ -555,7 +555,7 @@
-            aff3ct-shared-lib
-            aff3ct-static-lib
+     export(TARGETS aff3ct-shared-lib aff3ct-static-lib ${CPPTRACE_TARGETS}
             NAMESPACE aff3ct${AFF3CT_LIB_SUFFIX}::
 -           FILE "lib/cmake/aff3ct-${AFF3CT_VERSION_FULL}/aff3ct${AFF3CT_LIB_SUFFIX}-config.cmake")
 +           FILE "lib/cmake/aff3ct${AFF3CT_LIB_SUFFIX}-${AFF3CT_VERSION_FULL}/aff3ct${AFF3CT_LIB_SUFFIX}-config.cmake")
  endif()
  
  # ---------------------------------------------------------------------------------------------------------------------
-@@ -619,12 +619,12 @@
+@@ -686,12 +686,12 @@
  if (AFF3CT_COMPILE_SHARED_LIB OR AFF3CT_COMPILE_STATIC_LIB)
      install(EXPORT
              aff3ct${AFF3CT_LIB_SUFFIX}-config
