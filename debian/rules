@@ -47,7 +47,7 @@ TEST_ARGS_TURBO_PROD	= --max-snr-time 30
 	dh  $@ --parallel --buildsystem=cmake
 
 override_dh_auto_configure: $(SIMD_TARGETS_DEPS:%.d=%.configured)
-$(builddir)/%.configured:
+$(builddir)/%.configured: doc/build/html/index.html
 	CPPFLAGS="$(CPPFLAGS) -DAFF3CT_SIMD_$(*F)" \
 	CFLAGS="$(CFLAGS) $(SIMD_TARGETS_$(*F))" \
 	CXXFLAGS="$(CXXFLAGS) $(SIMD_TARGETS_$(*F))" \
