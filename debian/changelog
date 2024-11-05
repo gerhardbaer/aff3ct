@@ -1,3 +1,9 @@
+aff3ct (3.0.2+git20241029.dcab226-1) unstable; urgency=medium
+
+  * Update to git 2024/10/29 (dcab226) from the develop branch
+
+ -- Gerhard Baer <Gerhard.Baer@protonmail.com>  Tue, 05 Nov 2024 11:23:56 +0100
+
 aff3ct (3.0.2+git20240130.6f1d3b7-1) unstable; urgency=medium
 
   * Update to git 2024/01/30 (6f1d3b7) from the development branch.
