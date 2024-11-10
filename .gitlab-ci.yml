@@ -296,7 +296,7 @@ build-linux-gcc-coverage:
   artifacts:
     name: build
     paths:
-      - build
+      - build.tar.gz
   script:
     - export CC="gcc"
     - export CXX="g++"
@@ -305,6 +305,9 @@ build-linux-gcc-coverage:
     - export CMAKE_OPT="-DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS_DEBUG=-O0 -DAFF3CT_COMPILE_EXE=ON -DAFF3CT_PREC=MULTI"
     - source ./ci/tools/threads.sh
     - ./ci/build-linux-macos.sh
+    - rm -rf build/lib/
+    - find build/CMakeFiles/aff3ct-obj.dir/ -name "*.o" -type f -delete
+    - tar -czvf build.tar.gz build
 
 build-linux-clang:
   image: registry.gitlab.com/aff3ct/aff3ct/x86_64_ubuntu_clang:v10.0.0
@@ -367,10 +370,12 @@ build-linux-icpc:
 build-windows-gcc-x86-sse4.2:
   image: registry.gitlab.com/aff3ct/aff3ct/x86_64_windows_gcc:v8.1.0
   stage: build
+  rules:
+    - if: '$CI_AFF3CT_WINDOWS_RUNNERS == "ON"'
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: never
   variables:
     GIT_SUBMODULE_STRATEGY: recursive
-  except:
-    - schedules
   needs:
     - job: analysis-cppcheck
       artifacts: false
@@ -395,10 +400,12 @@ build-windows-gcc-x86-sse4.2:
 build-windows-gcc-x64-avx2:
   image: registry.gitlab.com/aff3ct/aff3ct/x86_64_windows_gcc:v8.1.0
   stage: build
+  rules:
+    - if: '$CI_AFF3CT_WINDOWS_RUNNERS == "ON"'
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: never
   variables:
     GIT_SUBMODULE_STRATEGY: recursive
-  except:
-    - schedules
   needs:
     - job: analysis-cppcheck
       artifacts: false
@@ -423,10 +430,12 @@ build-windows-gcc-x64-avx2:
 build-windows-msvc-avx:
   image: registry.gitlab.com/aff3ct/aff3ct/x86_64_windows_msvc:v15
   stage: build
+  rules:
+    - if: '$CI_AFF3CT_WINDOWS_RUNNERS == "ON"'
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: never
   variables:
     GIT_SUBMODULE_STRATEGY: recursive
-  except:
-    - schedules
   needs:
     - job: analysis-cppcheck
       artifacts: false
@@ -886,6 +895,7 @@ test-coverage-regression:
      paths:
       - code_coverage_files/
   script:
+    - tar -xvvf build.tar.gz
     - source ./ci/tools/git-version.sh
     - ./ci/test-coverage-regression.sh
 
@@ -939,8 +949,11 @@ deploy-sonarqube-linux:
 deploy-builds-linux:
   image: registry.gitlab.com/aff3ct/aff3ct/x86_64_ubuntu_git:v2.25.1
   stage: deploy
-  except:
-    - schedules
+  rules:
+    - if: '$CI_AFF3CT_WINDOWS_RUNNERS == "ON" && $CI_COMMIT_REF_NAME == "master"'
+    - if: '$CI_AFF3CT_WINDOWS_RUNNERS == "ON" && $CI_COMMIT_REF_NAME == "develop"'
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: never
   dependencies:
     - build-linux-gcc-x64-sse4.2
     - build-linux-gcc-x64-avx2
@@ -952,9 +965,6 @@ deploy-builds-linux:
     - linux
     - docker
     - no_proxy
-  only:
-    - master
-    - develop
   artifacts:
      name: builds
      when: always
