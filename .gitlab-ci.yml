@@ -950,8 +950,8 @@ deploy-builds-linux:
   image: registry.gitlab.com/aff3ct/aff3ct/x86_64_ubuntu_git:v2.25.1
   stage: deploy
   rules:
-    - if: '$CI_AFF3CT_WINDOWS_RUNNERS == "ON" && $CI_COMMIT_REF_NAME == "master"'
-    - if: '$CI_AFF3CT_WINDOWS_RUNNERS == "ON" && $CI_COMMIT_REF_NAME == "develop"'
+    - if: '$CI_AFF3CT_DEPLOY == "ON" && $CI_AFF3CT_WINDOWS_RUNNERS == "ON" && $CI_COMMIT_REF_NAME == "master"'
+    - if: '$CI_AFF3CT_DEPLOY == "ON" && $CI_AFF3CT_WINDOWS_RUNNERS == "ON" && $CI_COMMIT_REF_NAME == "develop"'
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: never
   dependencies:
