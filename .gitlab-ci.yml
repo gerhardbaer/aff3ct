@@ -925,8 +925,11 @@ deploy-sonarqube-linux:
   stage: deploy
   variables:
     GIT_SUBMODULE_STRATEGY: recursive
-  except:
-    - schedules
+  rules:
+    - if: '$CI_AFF3CT_DEPLOY == "ON" && $CI_COMMIT_REF_NAME == "master"'
+    - if: '$CI_AFF3CT_DEPLOY == "ON" && $CI_COMMIT_REF_NAME == "develop"'
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: never
   dependencies:
     - analysis-cppcheck
     - coverage-linux
@@ -936,9 +939,6 @@ deploy-sonarqube-linux:
     - linux
     - docker
     - no_proxy
-  only:
-    - master
-    - develop
   allow_failure: true
   script:
     - export REPORTS_DIR="clang_reports"
@@ -996,8 +996,12 @@ deploy-upload-ppa:
   stage: deploy
   variables:
     GIT_SUBMODULE_STRATEGY: recursive
-  except:
-    - schedules
+  rules:
+    - if: '$CI_AFF3CT_DEPLOY == "ON" && $CI_COMMIT_REF_NAME == "master"'
+    - if: '$CI_AFF3CT_DEPLOY == "ON" && $CI_COMMIT_REF_NAME == "develop"'
+    - if: '$CI_AFF3CT_DEPLOY == "ON" && $CI_COMMIT_REF_NAME == "ppa_upload"'
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: never
   dependencies:
     - analysis-documentation
   allow_failure: true
@@ -1006,10 +1010,6 @@ deploy-upload-ppa:
     - linux
     - docker
     - no_proxy
-  only:
-    - master
-    - develop
-    - ppa_upload
   artifacts:
     name: ppa_files
     when: always
