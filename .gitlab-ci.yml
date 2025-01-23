@@ -31,7 +31,7 @@ analysis-cppcheck:
     - ./ci/analysis-cppcheck.sh
 
 analysis-clang-format:
-  image: ubuntu:23.04
+  image: ubuntu:22.04
   stage: analysis
   tags:
     - x86_64
