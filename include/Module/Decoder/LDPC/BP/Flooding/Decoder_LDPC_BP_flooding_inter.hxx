@@ -50,7 +50,7 @@ Decoder_LDPC_BP_flooding_inter<B, R, Update_rule>::Decoder_LDPC_BP_flooding_inte
     {
         std::stringstream message;
         message << "'sat_val' has to be greater than 0 ('sat_val' = " << this->sat_val << ").";
-        throw tools::runtime_error(__FILE__, __LINE__, __func__, message.str());
+        throw spu::tools::runtime_error(__FILE__, __LINE__, __func__, message.str());
     }
 
     mipp::vector<unsigned char> connections(this->H.get_n_rows(), 0);
@@ -77,7 +77,7 @@ Decoder_LDPC_BP_flooding_inter<B, R, Update_rule>::Decoder_LDPC_BP_flooding_inte
                 message << "'connections[var_id]' has to be equal or smaller than 'msg_var_to_chk_id[var_id].size()' "
                         << "('var_id' = " << var_id << ", 'connections[var_id]' = " << connections[var_id]
                         << ", 'msg_var_to_chk_id[var_id].size()' = " << msg_var_to_chk_id[var_id].size() << ").";
-                throw tools::runtime_error(__FILE__, __LINE__, __func__, message.str());
+                throw spu::tools::runtime_error(__FILE__, __LINE__, __func__, message.str());
             }
 
             transpose[k] = branch_id;
@@ -250,7 +250,7 @@ Decoder_LDPC_BP_flooding_inter<B, R, Update_rule>::_decode(const mipp::Reg<R>* Y
         {
             this->_compute_post(Y_N, this->msg_chk_to_var[cur_wave], this->post);
             packed_synd = this->_check_syndrome_soft_status(this->post);
-            if (packed_synd == runtime::status_t::SUCCESS) break;
+            if (packed_synd == spu::runtime::status_t::SUCCESS) break;
         }
     }
     if (ite == this->n_ite) this->_compute_post(Y_N, this->msg_chk_to_var[cur_wave], this->post);
@@ -414,9 +414,9 @@ Decoder_LDPC_BP_flooding_inter<B, R, Update_rule>::_check_syndrome_soft_status(
             return packed_synd;
         }
         else
-            return runtime::status_t::SUCCESS;
+            return spu::runtime::status_t::SUCCESS;
     }
-    return runtime::status_t::FAILURE;
+    return spu::runtime::status_t::FAILURE;
 }
 
 template<typename B, typename R, class Update_rule>

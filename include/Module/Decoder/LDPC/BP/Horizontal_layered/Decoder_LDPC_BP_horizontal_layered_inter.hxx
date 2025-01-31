@@ -67,7 +67,7 @@ Decoder_LDPC_BP_horizontal_layered_inter<B, R, Update_rule>::Decoder_LDPC_BP_hor
     {
         std::stringstream message;
         message << "'sat_val' has to be greater than 0 ('sat_val' = " << this->sat_val << ").";
-        throw tools::runtime_error(__FILE__, __LINE__, __func__, message.str());
+        throw spu::tools::runtime_error(__FILE__, __LINE__, __func__, message.str());
     }
 
     this->reset();
@@ -231,7 +231,7 @@ Decoder_LDPC_BP_horizontal_layered_inter<B, R, Update_rule>::_decode(const size_
         this->up_rule.end_ite();
 
         packed_synd = this->_check_syndrome_soft_status(this->var_nodes[cur_wave]);
-        if (packed_synd == runtime::status_t::SUCCESS && this->enable_syndrome) break;
+        if (packed_synd == spu::runtime::status_t::SUCCESS && this->enable_syndrome) break;
     }
 
     this->up_rule.end_decoding();
@@ -347,12 +347,12 @@ Decoder_LDPC_BP_horizontal_layered_inter<B, R, Update_rule>::_check_syndrome_sof
                 return packed_synd;
             }
             else
-                return runtime::status_t::SUCCESS;
+                return spu::runtime::status_t::SUCCESS;
         }
-        return runtime::status_t::FAILURE;
+        return spu::runtime::status_t::FAILURE;
     }
     else
-        return runtime::status_t::SUCCESS;
+        return spu::runtime::status_t::SUCCESS;
 }
 
 template<typename B, typename R, class Update_rule>
